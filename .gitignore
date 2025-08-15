@@ -1,0 +1,11 @@
+# Build folders
+bin/
+obj/
+
+# SQLite / temporary databases
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
