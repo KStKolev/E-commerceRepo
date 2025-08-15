@@ -1,6 +1,7 @@
 # Build folders
-bin/
-obj/
+**/bin/
+**/obj/
+**/.vs/
 
 # SQLite / temporary databases
 *.db
