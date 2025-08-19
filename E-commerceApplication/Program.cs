@@ -39,7 +39,6 @@ builder.Services.AddSerilog();
 
 var app = builder.Build();
 
-app.UseErrorLogging();
 app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
@@ -48,11 +47,6 @@ if (app.Environment.IsDevelopment())
     app.UseMigrationsEndPoint();
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    app.MapGet("/throw", () =>
-    {
-        throw new InvalidOperationException("Test exception for logging");
-    });
 }
 else
 {
