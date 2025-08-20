@@ -13,12 +13,13 @@ namespace E_commerceApplication.Controllers
             _logger = logger;
         }
 
+
         [HttpGet("info")]
         public string GetInfo()
         {
             _logger.LogInformation("GetInfo method called");
             return "Hello world";
-        }
+        }  
 
         [HttpGet("id/{id}")]
         public int GetId(int id) 
