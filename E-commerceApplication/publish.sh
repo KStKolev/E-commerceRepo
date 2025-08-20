@@ -3,7 +3,7 @@
 # Publishes the application
 
 CONFIG=${1:-Release}
-OUTPUT=${2:-./publish}
+OUTPUT=${2:-./bin/publish}
 
 dotnet publish -c $CONFIG -o $OUTPUT
 echo "Published to $OUTPUT"
