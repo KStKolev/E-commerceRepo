@@ -7,6 +7,7 @@ namespace E_commerceApplication.Controllers
     public class ErrorController : ControllerBase
     {
         [Route("/Error")]
+        [HttpGet]
         public IActionResult HandleError()
         {
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
