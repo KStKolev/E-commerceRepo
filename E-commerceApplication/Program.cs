@@ -1,5 +1,6 @@
 using E_commerceApplication;
 using E_commerceApplication.DAL.Data;
+using E_commerceApplication.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -7,20 +8,30 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddUserSecrets<Program>(optional: true);
+
 var connectionString = builder.Configuration
     .GetConnectionString("DefaultConnection") ?? 
     throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+builder.Services
+    .AddOptions<SmtpSettings>()
+    .Bind(builder.Configuration.GetSection("Smtp"))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddApplicationServices();
 
 builder.Services.AddHealthChecks()
     .AddCheck(
@@ -39,6 +50,13 @@ builder.Services.AddSerilog();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+    await IdentityDataSeeder.SeedIdentityAsync(userManager, roleManager);
+}
+
 app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
@@ -56,6 +74,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
