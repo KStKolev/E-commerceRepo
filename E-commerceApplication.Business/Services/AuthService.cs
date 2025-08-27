@@ -60,10 +60,10 @@ namespace E_commerceApplication.Business.Services
             return SignInResult.Success;
         }
 
-        public async Task<IdentityResult> ConfirmEmailAsync(Guid userId, string token)
+        public async Task<IdentityResult> ConfirmEmailAsync(string userId, string token)
         {
             ApplicationUser? user = await _userManager
-                .FindByIdAsync(userId.ToString());
+                .FindByIdAsync(userId);
 
             if (user == null)
             {

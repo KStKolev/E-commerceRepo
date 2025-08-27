@@ -1,4 +1,5 @@
-﻿using E_commerceApplication.DAL.Entities;
+﻿using E_commerceApplication.Business;
+using E_commerceApplication.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace E_commerceApplication
@@ -8,13 +9,12 @@ namespace E_commerceApplication
         public static async Task SeedIdentityAsync(UserManager<ApplicationUser> userManager, 
             RoleManager<ApplicationRole> roleManager)
         {
-            string[] roles = { "User", "Admin" };
-
-            foreach (string role in roles)
+            foreach (RoleType role in Enum.GetValues(typeof(RoleType)))
             {
-                if (!await roleManager.RoleExistsAsync(role))
+                string roleName = role.ToString();
+                if (!await roleManager.RoleExistsAsync(roleName))
                 {
-                    await roleManager.CreateAsync(new ApplicationRole { Name = role });
+                    await roleManager.CreateAsync(new ApplicationRole { Name = roleName });
                 }
             }
 

@@ -7,10 +7,9 @@ namespace E_commerceApplication
         [Required]
         public string Host { get; set; } = string.Empty;
 
-        [Range(587, 587, ErrorMessage = "Port must be 587.")]
         public int Port { get; set; }
 
-        [Required, EmailAddress]
+        [Required]
         public string User { get; set; } = string.Empty;
 
         [Required]

@@ -7,6 +7,6 @@ namespace E_commerceApplication.Business.Interfaces
     {
         Task<IdentityResult> SignUpAsync(SignUpRequestModel requestDto);
         Task<SignInResult> SignInAsync(SignInRequestModel requestDto);
-        Task<IdentityResult> ConfirmEmailAsync(Guid userId, string token);
+        Task<IdentityResult> ConfirmEmailAsync(string userId, string token);
     }
 }

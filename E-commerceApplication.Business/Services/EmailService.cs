@@ -1,4 +1,5 @@
 ﻿using E_commerceApplication.Business.Interfaces;
+using E_commerceApplication.Business.Resources;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
@@ -22,11 +23,13 @@ namespace E_commerceApplication.Business.Services
                 EnableSsl = true
             };
 
+            string body = string.Format(EmailMessages.ConfirmEmailBody, link);
+
             var mail = new MailMessage
             {
-                From = new MailAddress(_smtpSettings.User, "E-commerceApplication"),
-                Subject = "Confirm your email",
-                Body = $"Please confirm your account by clicking this link: <a href='{link}'>Confirm Email</a>",
+                From = new MailAddress(_smtpSettings.User, EmailMessages.SenderName),
+                Subject = EmailMessages.SubjectTitle,
+                Body = body,
                 IsBodyHtml = true
             };
 
