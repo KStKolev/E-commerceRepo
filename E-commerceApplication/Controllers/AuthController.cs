@@ -60,7 +60,7 @@ namespace E_commerceApplication.Controllers
 
         [AllowAnonymous]
         [HttpGet("emailConfirm")]
-        public async Task<IActionResult> EmailConfirm([FromQuery] Guid id, [FromQuery] string token)
+        public async Task<IActionResult> EmailConfirm([FromQuery] string id, [FromQuery] string token)
         {
             var result = await _authService.ConfirmEmailAsync(id, token);
 
