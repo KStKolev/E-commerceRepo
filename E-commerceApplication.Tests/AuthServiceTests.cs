@@ -2,6 +2,7 @@
 using E_commerceApplication.Business.Models;
 using E_commerceApplication.Business.Services;
 using E_commerceApplication.DAL.Entities;
+using E_commerceApplication.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 
@@ -80,7 +81,7 @@ namespace E_commerceApplication.Tests
             _userManagerMock.Setup(u => u.ConfirmEmailAsync(user, token))
                             .ReturnsAsync(IdentityResult.Success);
 
-            var result = await _authService.ConfirmEmailAsync(userId.ToString(), token);
+            var result = await _authService.ConfirmEmailAsync(userId, token);
 
             Assert.True(result.Succeeded);
             _userManagerMock.Verify(u => u.ConfirmEmailAsync(user, token), Times.Once);
@@ -91,15 +92,13 @@ namespace E_commerceApplication.Tests
         {
             var request = new SignUpRequestModel { Email = "fail@test.com", Password = "Password1" };
 
-            string description = "User creation failed";
-
             _userManagerMock.Setup(u => u.CreateAsync(It.IsAny<ApplicationUser>(), request.Password))
-                            .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = description }));
+                            .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "User creation failed" }));
 
             var result = await _authService.SignUpAsync(request);
 
             Assert.False(result.Succeeded);
-            Assert.Contains(description, result.Errors.Select(e => e.Description));
+            Assert.Contains("User creation failed", result.Errors.Select(e => e.Description));
             _emailServiceMock.Verify(e => e.SendEmailConfirmationAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
@@ -137,7 +136,7 @@ namespace E_commerceApplication.Tests
         [Fact]
         public async Task EmailConfirm_ShouldFail_WhenUserNotFound()
         {
-            string userId = string.Empty;
+            var userId = Guid.NewGuid();
             var token = "token";
 
             _userManagerMock.Setup(u => u.FindByIdAsync(userId.ToString()))
@@ -155,18 +154,16 @@ namespace E_commerceApplication.Tests
             var token = "wrong-token";
             var user = new ApplicationUser { Id = userId };
 
-            string description = "Invalid token";
-
             _userManagerMock.Setup(u => u.FindByIdAsync(userId.ToString()))
                             .ReturnsAsync(user);
 
             _userManagerMock.Setup(u => u.ConfirmEmailAsync(user, token))
-                            .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = description }));
+                            .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Invalid token" }));
 
-            var result = await _authService.ConfirmEmailAsync(userId.ToString(), token);
+            var result = await _authService.ConfirmEmailAsync(userId, token);
 
             Assert.False(result.Succeeded);
-            Assert.Contains(description, result.Errors.Select(e => e.Description));
+            Assert.Contains("Invalid token", result.Errors.Select(e => e.Description));
         }
     }
 }

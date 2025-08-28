@@ -1,5 +1,4 @@
-﻿using E_commerceApplication.Business;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_commerceApplication.Controllers
@@ -16,7 +15,7 @@ namespace E_commerceApplication.Controllers
             _logger = logger;
         }
 
-        [Authorize(Roles = nameof(RoleType.Admin))]
+        [Authorize(Roles = "Admin")]
         [HttpGet("info")]
         public string GetInfo()
         {
