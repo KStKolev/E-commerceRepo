@@ -1,6 +1,6 @@
 ﻿namespace E_commerceApplication.DTOs
 {
-    public class SignInRequestDto : AuthCredentialsRequestDto
+    public class SignInRequestDto : AuthRequestDto
     {
     }
 }
