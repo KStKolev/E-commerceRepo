@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Security.Claims;
 
-namespace E_commerceApplication.Tests
+namespace E_commerceApplication.Tests.ControllerTests
 {
     public class UserControllerTests
     {

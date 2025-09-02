@@ -1,6 +1,6 @@
 ﻿using E_commerceApplication.DTOs;
 
-namespace E_commerceApplication.Tests
+namespace E_commerceApplication.Tests.DTOTests
 {
     public class UpdatePasswordDtoTests
     {

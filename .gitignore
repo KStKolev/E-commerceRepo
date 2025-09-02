@@ -10,3 +10,6 @@
 
 # Logs
 E-commerceApplication/Logs
+
+# User-secrets
+secrets.json
