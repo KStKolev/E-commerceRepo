@@ -5,7 +5,7 @@ using E_commerceApplication.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 
-namespace E_commerceApplication.Tests
+namespace E_commerceApplication.Tests.ServiceTests
 {
     public class AuthServiceTests
     {

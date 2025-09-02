@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddUserSecrets<Program>(optional: true);
+    .AddUserSecrets<Program>(optional: false);
 
 var connectionString = builder.Configuration
     .GetConnectionString("DefaultConnection") ?? 
@@ -32,6 +32,11 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplicationServices();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/api/auth/signIn";
+});
 
 builder.Services.AddHealthChecks()
     .AddCheck(

@@ -7,7 +7,8 @@ namespace E_commerceApplication
         [Required]
         public string Host { get; set; } = string.Empty;
 
-        public int Port { get; set; }
+        // Default SMTP port is 578
+        public int Port { get; set; } = 578;
 
         [Required]
         public string User { get; set; } = string.Empty;
