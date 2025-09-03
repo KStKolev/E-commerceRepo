@@ -2,6 +2,8 @@
 using E_commerceApplication.Business.Services;
 using E_commerceApplication.DAL.Data;
 using E_commerceApplication.DAL.Entities;
+using E_commerceApplication.DAL.Interfaces;
+using E_commerceApplication.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 
 namespace E_commerceApplication
@@ -24,6 +26,10 @@ namespace E_commerceApplication
                 .AddScoped<IEmailService, EmailService>();
             services
                 .AddScoped<IUserService, UserService>();
+            services
+                .AddScoped<IProductRepository, ProductRepository>();
+            services
+                .AddScoped<IGamesService, GamesService>();
 
             return services;
         }
