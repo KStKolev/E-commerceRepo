@@ -31,7 +31,7 @@ namespace E_commerceApplication.DAL.Data
 
             builder
                 .Entity<Product>()
-                .Property(p => p.TotalRating);
+                .HasIndex(p => p.TotalRating);
 
             builder
                 .Entity<Product>()
