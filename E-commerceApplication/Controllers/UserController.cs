@@ -7,6 +7,9 @@ using System.Security.Claims;
 
 namespace E_commerceApplication.Controllers
 {
+    /// <summary>
+    /// Controller for managing user profiles and passwords.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
@@ -19,7 +22,15 @@ namespace E_commerceApplication.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Retrieves the profile information for the currently authenticated user.
+        /// </summary>
+        /// <returns>
+        /// 200 OK with the profile data, or 404 Not Found if no profile exists.
+        /// </returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserProfileDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProfile() 
         {
             var userId = User
@@ -36,7 +47,18 @@ namespace E_commerceApplication.Controllers
             return Ok(profile);
         }
 
+        /// <summary>
+        /// Updates the profile information for the currently authenticated user.
+        /// </summary>
+        /// <param name="userProfileDto">
+        /// The new profile data, including username, phone number, and delivery address.
+        /// </param>
+        /// <returns>
+        /// 200 OK with the updated profile, or 400 Bad Request if the update fails due to validation or other errors.
+        /// </returns>
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateProfile(UserProfileDto userProfileDto)
         {
             var userId = User
@@ -60,7 +82,18 @@ namespace E_commerceApplication.Controllers
             return Ok(userProfileModel);
         }
 
+        /// <summary>
+        /// Updates the password for the currently authenticated user.
+        /// </summary>
+        /// <param name="updatePasswordDto">
+        /// New password data, including current and new passwords.
+        /// </param>
+        /// <returns>
+        /// 204 No Content with password update, or 400 Bad Request if the update fails due to validation or other errors.
+        /// </returns>
         [HttpPatch("password")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDto updatePasswordDto) 
         {
             var userId = User
