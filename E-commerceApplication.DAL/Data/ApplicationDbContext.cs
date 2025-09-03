@@ -10,5 +10,83 @@ namespace E_commerceApplication.DAL.Data
             : base(options)
         {
         }
+
+        public DbSet<Product> Products { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder
+                .Entity<Product>()
+                .HasIndex(p => p.Name);
+
+            builder
+                .Entity<Product>()
+                .HasIndex(p => p.Platform);
+
+            builder
+                .Entity<Product>()
+                .HasIndex(p => p.DateCreated);
+
+            builder
+                .Entity<Product>()
+                .Property(p => p.TotalRating);
+
+            builder
+                .Entity<Product>()
+                .Property(p => p.Price)
+                .HasColumnType("decimal(18,2)");
+
+            builder
+                .Entity<Product>()
+                .HasData(
+                    new Product
+                    {
+                        Id = 1,
+                        Name = "Halo Infinite",
+                        Platform = Platforms.Web,
+                        DateCreated = new DateTime(2021, 12, 8),
+                        TotalRating = 8.5,
+                        Price = 59.99m
+                    },
+                    new Product
+                    {
+                        Id = 2,
+                        Name = "God of War",
+                        Platform = Platforms.Mobile,
+                        DateCreated = new DateTime(2018, 4, 20),
+                        TotalRating = 9.8,
+                        Price = 39.99m
+                    },
+                    new Product
+                    {
+                        Id = 3,
+                        Name = "Half-Life: Alyx",
+                        Platform = Platforms.Web,
+                        DateCreated = new DateTime(2020, 3, 23),
+                        TotalRating = 9.2,
+                        Price = 49.99m
+                    },
+                    new Product
+                    {
+                        Id = 4,
+                        Name = "The Legend of Zelda: Breath of the Wild",
+                        Platform = Platforms.Desktop,
+                        DateCreated = new DateTime(2017, 3, 3),
+                        TotalRating = 9.7,
+                        Price = 59.99m
+                    },
+                    new Product
+                    {
+                        Id = 5,
+                        Name = "Elden Ring",
+                        Platform = Platforms.Console,
+                        DateCreated = new DateTime(2022, 2, 25),
+                        TotalRating = 9.6,
+                        Price = 69.99m
+                    }
+                );
+        }
     }
 }
