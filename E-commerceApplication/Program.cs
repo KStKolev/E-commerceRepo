@@ -1,3 +1,5 @@
+using CloudinaryDotNet;
+using dotenv.net;
 using E_commerceApplication;
 using E_commerceApplication.DAL.Data;
 using E_commerceApplication.DAL.Entities;
@@ -25,6 +27,14 @@ builder.Services
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
+DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
+
+var cloudinaryUrl = Environment
+    .GetEnvironmentVariable("CLOUDINARY_URL");
+
+Cloudinary cloudinary = new Cloudinary(cloudinaryUrl);
+cloudinary.Api.Secure = true;
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddRazorPages();
@@ -37,10 +47,17 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddApplicationServices();
+builder.Services.AddSingleton(cloudinary);
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/api/auth/signIn";
+
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        return Task.CompletedTask;
+    };
 });
 
 builder.Services.AddHealthChecks()

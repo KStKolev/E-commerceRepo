@@ -117,10 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ProductNotFound" xml:space="preserve">
-    <value>Product not found</value>
+  <data name="BackgroundRequired" xml:space="preserve">
+    <value>Background is required</value>
   </data>
-  <data name="UserNotFound" xml:space="preserve">
-    <value>User not found</value>
+  <data name="CountRequired" xml:space="preserve">
+    <value>Count is required</value>
+  </data>
+  <data name="GenreRequired" xml:space="preserve">
+    <value>Genre is required</value>
+  </data>
+  <data name="LogoRequired" xml:space="preserve">
+    <value>Logo is required</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Name is required</value>
+  </data>
+  <data name="PlatformRequired" xml:space="preserve">
+    <value>Platform is required</value>
+  </data>
+  <data name="PriceRequired" xml:space="preserve">
+    <value>Price is required</value>
+  </data>
+  <data name="RatingRequired" xml:space="preserve">
+    <value>Rating is required</value>
   </data>
 </root>

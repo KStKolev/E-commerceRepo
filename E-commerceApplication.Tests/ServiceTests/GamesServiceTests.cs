@@ -1,4 +1,5 @@
-﻿using E_commerceApplication.Business.Services;
+﻿using E_commerceApplication.Business.Models;
+using E_commerceApplication.Business.Services;
 using E_commerceApplication.DAL.Entities;
 using E_commerceApplication.DAL.Interfaces;
 using Moq;
@@ -104,6 +105,250 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             Assert.NotNull(result);
             Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetGameByIdAsync_ShouldReturnGame_WhenGameExists()
+        {
+            int gameId = 1;
+            string productName = "Halo Infinite";
+
+            var product = new Product
+            {
+                Id = gameId,
+                Name = productName,
+                Platform = Platforms.Console
+            };
+
+            _productRepositoryMock
+                .Setup(repo => repo.GetProductByIdAsync(gameId))
+                .ReturnsAsync(product);
+
+            var result = await _gamesService
+                .GetGameByIdAsync(gameId);
+
+            Assert
+                .NotNull(result);
+
+            Assert
+                .Equal(gameId, result!.Id);
+        }
+
+        [Fact]
+        public async Task GetGameByIdAsync_ShouldReturnNull_WhenGameDoesNotExist()
+        {
+            int gameId = 1;
+
+            _productRepositoryMock
+                .Setup(repo => repo.GetProductByIdAsync(gameId))
+                .ReturnsAsync((Product?)null);
+
+            var result = await _gamesService
+                .GetGameByIdAsync(gameId);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task CreateGameAsync_ShouldReturnNewGameId()
+        {
+            var gameId = 1;
+            string gameName = "Halo Infinite";
+            string genre = "Action";
+            string logoName = "logo.png";
+            string backgroundName = "background.png";
+            int count = 100;
+            decimal price = 59.99m;
+
+            var gameModel = new GamesModel
+            {
+                Name = gameName,
+                Genre = genre,
+                Platform = Platforms.Console,
+                Logo = logoName,
+                Background = backgroundName,
+                Rating = Rating.Mature,
+                Count = count,
+                Price = price
+            };
+
+            var createdProduct = new Product
+            {
+                Id = gameId,
+                Name = gameModel.Name,
+                Genre = gameModel.Genre,
+                Platform = gameModel.Platform,
+                Logo = gameModel.Logo,
+                Background = gameModel.Background,
+                Rating = gameModel.Rating,
+                Count = gameModel.Count,
+                Price = gameModel.Price,
+                DateCreated = DateTime.UtcNow
+            };
+
+            _productRepositoryMock
+                .Setup(repo => repo.CreateProductAsync(It.IsAny<Product>()))
+                .ReturnsAsync(createdProduct);
+
+            var result = await _gamesService
+                .CreateGameAsync(gameModel);
+
+            Assert
+                .Equal(createdProduct.Id, result);
+        }
+
+        [Fact]
+        public async Task UpdateGameAsync_ShouldUpdateGame_WhenGameExists()
+        {
+            int gameId = 1;
+            string gameName = "Halo Infinite";
+            string gameNameUpdated = "Halo Infinite Updated";
+            string genre = "Action";
+            string logoName = "logo_updated.png";
+            string backgroundName = "background_updated.png";
+            int count = 150;
+            decimal price = 49.99m;
+
+            var existingProduct = new Product
+            {
+                Id = gameId,
+                Name = gameName,
+                Platform = Platforms.Console
+            };
+
+            var updatedGameModel = new UpdateGamesModel
+            {
+                Id = gameId,
+                Name = gameNameUpdated,
+                Genre = genre,
+                Platform = Platforms.Console,
+                Logo = logoName,
+                Background = backgroundName,
+                Rating = Rating.Mature,
+                Count = count,
+                Price = price
+            };
+
+            _productRepositoryMock
+                .Setup(repo => repo.GetProductByIdAsync(gameId))
+                .ReturnsAsync(existingProduct);
+
+            _productRepositoryMock
+                .Setup(repo => repo.UpdateProductAsync(existingProduct))
+                .Returns(Task.CompletedTask)
+                .Verifiable();
+
+            await _gamesService
+                .UpdateGameAsync(updatedGameModel);
+
+            _productRepositoryMock
+                .Verify(repo => repo.UpdateProductAsync(existingProduct), Times.Once);
+
+            Assert
+                .Equal(updatedGameModel.Name, existingProduct.Name);
+
+            Assert
+                .Equal(updatedGameModel.Genre, existingProduct.Genre);
+
+            Assert
+                .Equal(updatedGameModel.Platform, existingProduct.Platform);
+
+            Assert
+                .Equal(updatedGameModel.Logo, existingProduct.Logo);
+
+            Assert
+                .Equal(updatedGameModel.Background, existingProduct.Background);
+
+            Assert
+                .Equal(updatedGameModel.Rating, existingProduct.Rating);
+
+            Assert
+                .Equal(updatedGameModel.Count, existingProduct.Count);
+
+            Assert
+                .Equal(updatedGameModel.Price, existingProduct.Price);
+        }
+
+        [Fact]
+        public async Task UpdateGameAsync_ShouldThrowArgumentException_WhenGameDoesNotExist()
+        {
+            int gameId = 1;
+            string gameName = "Halo Infinite updated";
+            string genre = "Action";
+            string logoName = "logo_updated.png";
+            string backgroundName = "background_updated.png";
+            int count = 150;
+            decimal price = 49.99m;
+            string productNotFoundMessage = "Product not found";
+
+            var updatedGameModel = new UpdateGamesModel
+            {
+                Id = gameId,
+                Name = gameName,
+                Genre = genre,
+                Platform = Platforms.Console,
+                Logo = logoName,
+                Background = backgroundName,
+                Rating = Rating.Mature,
+                Count = count,
+                Price = price
+            };
+
+            _productRepositoryMock
+                .Setup(repo => repo.GetProductByIdAsync(gameId))
+                .ReturnsAsync((Product?)null);
+
+            var exception = await Assert
+                .ThrowsAsync<ArgumentException>(async () => await _gamesService.UpdateGameAsync(updatedGameModel));
+
+            Assert
+                .Equal(productNotFoundMessage, exception.Message);
+        }
+
+        [Fact]
+        public async Task DeleteGameAsync_ShouldDeleteGame_WhenGameExists()
+        {
+            int gameId = 1;
+            string gameName = "Halo Infinite";
+
+            var product = new Product
+            {
+                Id = gameId,
+                Name = gameName,
+                Platform = Platforms.Console
+            };
+
+            _productRepositoryMock
+                .Setup(repo => repo.GetProductByIdAsync(gameId))
+                .ReturnsAsync(product);
+
+            _productRepositoryMock
+                .Setup(repo => repo.DeleteProductAsync(product))
+                .Returns(Task.CompletedTask)
+                .Verifiable();
+
+            await _gamesService
+                .DeleteGameAsync(gameId);
+
+            _productRepositoryMock
+                .Verify(repo => repo.DeleteProductAsync(product), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteGameAsync_ShouldThrowArgumentException_WhenGameDoesNotExist()
+        {
+            int gameId = 1;
+            string productNotFoundMessage = "Product not found";
+
+            _productRepositoryMock
+                .Setup(repo => repo.GetProductByIdAsync(gameId))
+                .ReturnsAsync((Product?)null);
+
+            var exception = await Assert
+                .ThrowsAsync<ArgumentException>(async () => await _gamesService.DeleteGameAsync(gameId));
+
+            Assert
+                .Equal(productNotFoundMessage, exception.Message);
         }
     }
 }
