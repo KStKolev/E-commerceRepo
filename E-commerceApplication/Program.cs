@@ -51,7 +51,11 @@ builder.Services.AddSingleton(cloudinary);
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/api/auth/signIn";
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
 
     options.Events.OnRedirectToAccessDenied = context =>
     {
