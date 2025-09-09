@@ -118,9 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ProductNotFound" xml:space="preserve">
-    <value>Product not found</value>
-  </data>
-  <data name="UserNotFound" xml:space="preserve">
-    <value>User not found</value>
+    <value>No product found with id {0}</value>
   </data>
 </root>

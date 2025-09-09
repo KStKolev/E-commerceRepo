@@ -19,6 +19,10 @@ namespace E_commerceApplication.DAL.Data
 
             builder
                 .Entity<Product>()
+                .HasQueryFilter(p => !p.IsDeleted);
+
+            builder
+                .Entity<Product>()
                 .HasIndex(p => p.Name);
 
             builder
@@ -47,7 +51,7 @@ namespace E_commerceApplication.DAL.Data
                         Name = "Halo Infinite",
                         Platform = Platforms.Web,
                         DateCreated = new DateTime(2021, 12, 8),
-                        TotalRating = 8.5,
+                        TotalRating = 20,
                         Price = 59.99m
                     },
                     new Product
@@ -56,7 +60,7 @@ namespace E_commerceApplication.DAL.Data
                         Name = "God of War",
                         Platform = Platforms.Mobile,
                         DateCreated = new DateTime(2018, 4, 20),
-                        TotalRating = 9.8,
+                        TotalRating = 44,
                         Price = 39.99m
                     },
                     new Product
@@ -65,7 +69,7 @@ namespace E_commerceApplication.DAL.Data
                         Name = "Half-Life: Alyx",
                         Platform = Platforms.Web,
                         DateCreated = new DateTime(2020, 3, 23),
-                        TotalRating = 9.2,
+                        TotalRating = 59,
                         Price = 49.99m
                     },
                     new Product
@@ -74,7 +78,7 @@ namespace E_commerceApplication.DAL.Data
                         Name = "The Legend of Zelda: Breath of the Wild",
                         Platform = Platforms.Desktop,
                         DateCreated = new DateTime(2017, 3, 3),
-                        TotalRating = 9.7,
+                        TotalRating = 72,
                         Price = 59.99m
                     },
                     new Product
@@ -83,7 +87,7 @@ namespace E_commerceApplication.DAL.Data
                         Name = "Elden Ring",
                         Platform = Platforms.Console,
                         DateCreated = new DateTime(2022, 2, 25),
-                        TotalRating = 9.6,
+                        TotalRating = 86,
                         Price = 69.99m
                     }
                 );

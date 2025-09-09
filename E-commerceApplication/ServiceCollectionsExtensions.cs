@@ -30,6 +30,8 @@ namespace E_commerceApplication
                 .AddScoped<IProductRepository, ProductRepository>();
             services
                 .AddScoped<IGamesService, GamesService>();
+            services
+                .AddScoped<IImageService, ImageService>();
 
             return services;
         }

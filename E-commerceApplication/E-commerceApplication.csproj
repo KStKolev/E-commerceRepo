@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.0.1" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.27.7" />
+    <PackageReference Include="dotenv.net" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.8" />
@@ -35,17 +37,35 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\ValidationMessages.Designer.cs">
+    <Compile Update="Resources\AuthDtoValidationMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ValidationMessages.resx</DependentUpon>
+      <DependentUpon>AuthDtoValidationMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\ControllerExceptionMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ControllerExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\GamesDtoValidationMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GamesDtoValidationMessages.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\ValidationMessages.resx">
+    <EmbeddedResource Update="Resources\AuthDtoValidationMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ValidationMessages.Designer.cs</LastGenOutput>
+      <LastGenOutput>AuthDtoValidationMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ControllerExceptionMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ControllerExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\GamesDtoValidationMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GamesDtoValidationMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
