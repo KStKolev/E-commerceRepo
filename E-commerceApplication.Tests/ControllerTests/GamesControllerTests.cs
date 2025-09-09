@@ -154,7 +154,7 @@ namespace E_commerceApplication.Tests.ControllerTests
                 Platform = Platforms.Web,
                 Logo = logoFileMock.Object,
                 Background = backgroundFileMock.Object,
-                Rating = Rating.Teen,
+                Rating = Rating.Twelve,
                 Count = count,
                 Price = price
             };
@@ -227,7 +227,7 @@ namespace E_commerceApplication.Tests.ControllerTests
                 Platform = Platforms.Web,
                 Logo = logoFileMock.Object,
                 Background = backgroundFileMock.Object,
-                Rating = Rating.Mature,
+                Rating = Rating.Eighteen,
                 Count = count,
                 Price = price
             };

@@ -23,9 +23,10 @@ namespace E_commerceApplication.DAL.Entities
 
         public DateTime DateCreated { get; set; }
 
-        public double TotalRating { get; set; }
-
         public decimal Price { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
+        public int TotalRating { get; set; }
     }
 }

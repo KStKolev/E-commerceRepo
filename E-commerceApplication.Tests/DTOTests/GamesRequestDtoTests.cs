@@ -72,7 +72,7 @@ namespace E_commerceApplication.Tests.DTOTests
                 Platform = Platforms.Desktop,
                 Logo = fileMock,
                 Background = fileMock,
-                Rating = Rating.Everyone,
+                Rating = Rating.All,
                 Count = count,
                 Price = price
             };
@@ -103,7 +103,7 @@ namespace E_commerceApplication.Tests.DTOTests
                 Platform = Platforms.Web,
                 Logo = fileMock,
                 Background = fileMock,
-                Rating = Rating.Teen,
+                Rating = Rating.Six,
                 Count = count,
                 Price = price
             };

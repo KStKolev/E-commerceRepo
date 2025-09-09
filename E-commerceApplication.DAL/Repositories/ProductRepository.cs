@@ -76,9 +76,11 @@ namespace E_commerceApplication.DAL.Repositories
 
         public async Task DeleteProductAsync(Product product)
         {
+            product.IsDeleted = true;
+
             _context
                 .Products
-                .Remove(product);
+                .Update(product);
 
             await _context
                 .SaveChangesAsync();

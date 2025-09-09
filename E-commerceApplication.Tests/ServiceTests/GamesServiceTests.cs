@@ -167,7 +167,7 @@ namespace E_commerceApplication.Tests.ServiceTests
                 Platform = Platforms.Console,
                 Logo = logoName,
                 Background = backgroundName,
-                Rating = Rating.Mature,
+                Rating = Rating.Eighteen,
                 Count = count,
                 Price = price
             };
@@ -224,7 +224,7 @@ namespace E_commerceApplication.Tests.ServiceTests
                 Platform = Platforms.Console,
                 Logo = logoName,
                 Background = backgroundName,
-                Rating = Rating.Mature,
+                Rating = Rating.Eighteen,
                 Count = count,
                 Price = price
             };
@@ -289,7 +289,7 @@ namespace E_commerceApplication.Tests.ServiceTests
                 Platform = Platforms.Console,
                 Logo = logoName,
                 Background = backgroundName,
-                Rating = Rating.Mature,
+                Rating = Rating.Eighteen,
                 Count = count,
                 Price = price
             };

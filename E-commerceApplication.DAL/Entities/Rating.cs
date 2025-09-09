@@ -2,9 +2,9 @@
 {
     public enum Rating
     {
-        Everyone = 0,
-        Teen = 1,
-        Mature = 2,
-        AdultsOnly = 3
+        All = 0,
+        Six = 6,
+        Twelve = 12,
+        Eighteen = 18
     }
 }
