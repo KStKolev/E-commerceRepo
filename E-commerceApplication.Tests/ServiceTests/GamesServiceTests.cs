@@ -350,5 +350,131 @@ namespace E_commerceApplication.Tests.ServiceTests
             Assert
                 .Equal(productNotFoundMessage, exception.Message);
         }
+
+        [Fact]
+        public async Task GetPaginatedGames_TwoProducts_ReturnsCorrectPage()
+        {
+            int productId1 = 1;
+            int productId2 = 2;
+
+            int totalRating1 = 5;
+            int totalRating2 = 8;
+
+            decimal price1 = 50;
+            decimal price2 = 60;
+
+            int productsCount = 2;
+            int page = 1;
+            int pageSize = 2;
+            int pageIndex = 1;
+
+            int productIndex1 = 0;
+            int productIndex2 = 1;
+
+            var products = new List<Product>
+            {
+                new Product { Id = productId1, TotalRating = totalRating1, Price = price1 },
+                new Product { Id = productId2, TotalRating = totalRating2, Price = price2 }
+            }.AsQueryable();
+
+            _productRepositoryMock
+                .Setup(r => r.GetFilteredProducts(It.IsAny<List<string>>(), It.IsAny<Rating>()))
+                .Returns(products);
+
+            _productRepositoryMock
+                .Setup(r => r.GetSortedProducts(It.IsAny<IQueryable<Product>>(),
+                    It.IsAny<SortByField>(), It.IsAny<SortOrder>()))
+                .Returns<IQueryable<Product>, SortByField, SortOrder>((q, s, o) => q);
+
+            _productRepositoryMock
+                .Setup(r => r.GetPaginationProductItems(It.IsAny<IQueryable<Product>>(), 
+                    It.IsAny<int>(), It.IsAny<int>()))
+                .Returns<IQueryable<Product>, int, int>((q, page, pageSize) =>
+                    Task.FromResult(q.Skip((page - pageIndex) * pageSize)
+                    .Take(pageSize)
+                    .ToList()));
+
+            var filterModel = new GameFilterAndSortModel
+            {
+                Genres = new List<string>(),
+                Age = Rating.All,
+                SortBy = SortByField.Rating,
+                SortOrder = SortOrder.Desc
+            };
+
+            var paginationModel = new PaginationRequestModel
+            {
+                Page = page,
+                PageSize = pageSize
+            };
+
+            PaginatedResponseModel<Product> result = await _gamesService
+                .GetPaginatedGames(filterModel, paginationModel);
+
+            Assert
+                .Equal(productsCount, result.Items.Count);
+
+            Assert
+                .Equal(productId1, result.Items[productIndex1].Id);
+
+            Assert
+                .Equal(productId2, result.Items[productIndex2].Id);
+
+            Assert
+                .Equal(page, result.Page);
+
+            Assert
+                .Equal(pageSize, result.PageSize);
+        }
+
+        [Fact]
+        public async Task GetPaginatedGames_EmptyProducts_ReturnsEmptyList()
+        {
+            int page = 1;
+            int pageSize = 2;
+
+            var products = new List<Product>()
+                .AsQueryable();
+
+            _productRepositoryMock
+                .Setup(r => r.GetFilteredProducts(It.IsAny<List<string>>(), It.IsAny<Rating>()))
+                .Returns(products);
+
+            _productRepositoryMock
+                .Setup(r => r.GetSortedProducts(It.IsAny<IQueryable<Product>>(),
+                    It.IsAny<SortByField>(), It.IsAny<SortOrder>()))
+                .Returns(products);
+
+            _productRepositoryMock
+                .Setup(r => r.GetPaginationProductItems(It.IsAny<IQueryable<Product>>(), 
+                    It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(Task.FromResult(new List<Product>()));
+
+            var filterModel = new GameFilterAndSortModel
+            {
+                Genres = new List<string>(),
+                Age = Rating.All,
+                SortBy = SortByField.Price,
+                SortOrder = SortOrder.Asc
+            };
+
+            var paginationModel = new PaginationRequestModel
+            {
+                Page = page,
+                PageSize = pageSize
+            };
+
+            PaginatedResponseModel<Product> result = await _gamesService
+                .GetPaginatedGames(filterModel, paginationModel);
+
+            Assert
+                .Empty(result.Items);
+
+            Assert
+                .Equal(page, result.Page);
+
+            Assert
+                .Equal(pageSize, result.PageSize);
+        }
     }
 }

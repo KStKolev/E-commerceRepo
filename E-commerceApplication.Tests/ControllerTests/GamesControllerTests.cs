@@ -3,10 +3,12 @@ using E_commerceApplication.Business.Models;
 using E_commerceApplication.Controllers;
 using E_commerceApplication.DAL.Entities;
 using E_commerceApplication.DTOs;
+using E_commerceApplication.Resources;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Security.Claims;
 
 namespace E_commerceApplication.Tests.ControllerTests
 {
@@ -14,13 +16,17 @@ namespace E_commerceApplication.Tests.ControllerTests
     {
         private readonly Mock<IGamesService> _mockGamesService;
         private readonly Mock<IImageService> _mockImageService;
+        private readonly Mock<IRatingService> _mockRatingService;
         private readonly GamesController _controller;
 
         public GamesControllerTests()
         {
             _mockGamesService = new Mock<IGamesService>();
             _mockImageService = new Mock<IImageService>();
-            _controller = new GamesController(_mockGamesService.Object, _mockImageService.Object);
+            _mockRatingService = new Mock<IRatingService>();
+
+            _controller = new GamesController(_mockGamesService.Object, 
+                _mockImageService.Object, _mockRatingService.Object);
         }
 
         [Fact]
@@ -159,11 +165,13 @@ namespace E_commerceApplication.Tests.ControllerTests
                 Price = price
             };
 
-            _mockImageService.Setup(s => s
+            _mockImageService
+                .Setup(s => s
                 .UploadImageAsync(gameDto.Logo))
                 .ReturnsAsync(logoUrl);
 
-            _mockImageService.Setup(s => s
+            _mockImageService
+                .Setup(s => s
                 .UploadImageAsync(gameDto.Background))
                 .ReturnsAsync(backgroundUrl);
 
@@ -321,6 +329,187 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             Assert
                 .IsType<NotFoundObjectResult>(result);
+        }
+
+        [Fact]
+        public async Task EditRating_ReturnsOk_WhenEditedSuccessfully()
+        {
+            var userId = Guid
+                .NewGuid();
+
+            ControllerTestHelper
+                .SetUser(_controller, userId);
+
+            int productId = 1;
+            int ratingValue = 5;
+
+            var dto = new EditRatingRequestDto
+            {
+                ProductId = productId,
+                Rating = ratingValue
+            };
+
+            _mockRatingService
+                .Setup(s => s.EditRatingGameAsync(It.IsAny<EditRatingModel>()))
+                .ReturnsAsync(true);
+
+            var result = await _controller
+                .EditRating(dto);
+
+            var okResult = Assert
+                .IsType<OkObjectResult>(result);
+
+            var model = Assert
+                .IsType<EditRatingModel>(okResult.Value);
+
+            Assert
+                .Equal(dto.ProductId, model.ProductId);
+
+            Assert
+                .Equal(userId, model.UserId);
+
+            Assert
+                .Equal(dto.Rating, model.Rating);
+        }
+
+        [Fact]
+        public async Task EditRating_ReturnsBadRequest_WhenEditFails()
+        {
+            var userId = Guid
+                .NewGuid();
+
+            ControllerTestHelper
+                .SetUser(_controller, userId);
+
+            int productId = 1;
+            int ratingValue = 5;
+
+            var dto = new EditRatingRequestDto
+            {
+                ProductId = productId,
+                Rating = ratingValue
+            };
+
+            _mockRatingService
+                .Setup(s => s.EditRatingGameAsync(It.IsAny<EditRatingModel>()))
+                .ReturnsAsync(false);
+
+            var result = await _controller
+                .EditRating(dto);
+
+            var badRequestResult = Assert
+                .IsType<BadRequestObjectResult>(result);
+
+            Assert
+                .Equal(GamesControllerFailedActionsMessages.EditRatingBadRequestMessage, badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task DeleteRating_ReturnsNoContent_WhenDeletedSuccessfully()
+        {
+            var userId = Guid
+                .NewGuid();
+
+            ControllerTestHelper
+                .SetUser(_controller, userId);
+
+            int productId1 = 1;
+            int productId2 = 2;
+
+            var dto = new DeleteRatingRequestDto
+            {
+                ProductIds = new List<int> { productId1, productId2 }
+            };
+
+            _mockRatingService
+                .Setup(s => s.DeleteRatingsAsync(It.IsAny<DeleteRatingModel>()))
+                .ReturnsAsync(true);
+
+            var result = await _controller
+                .DeleteRating(dto);
+
+            Assert
+                .IsType<NoContentResult>(result);
+        }
+
+        [Fact]
+        public async Task DeleteRating_ReturnsBadRequest_WhenDeleteFails()
+        {
+            var userId = Guid
+                .NewGuid();
+
+            ControllerTestHelper
+                .SetUser(_controller, userId);
+
+            int productId1 = 1;
+            int productId2 = 2;
+
+            var dto = new DeleteRatingRequestDto
+            {
+                ProductIds = new List<int> { productId1, productId2 }
+            };
+
+            _mockRatingService
+                .Setup(s => s.DeleteRatingsAsync(It.IsAny<DeleteRatingModel>()))
+                .ReturnsAsync(false);
+
+            var result = await _controller
+                .DeleteRating(dto);
+
+            var badRequestResult = Assert
+                .IsType<BadRequestObjectResult>(result);
+
+            Assert
+                .Equal(GamesControllerFailedActionsMessages.DeleteRatingsBadRequestMessage, badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task GetGameList_ReturnsOk_WithPaginatedGames()
+        {
+            int productId = 1;
+            string productName = "Game 1";
+            int page = 1;
+            int pageSize = 10;
+            string genre = "Action";
+
+            var paginatedGames = new PaginatedResponseModel<Product>
+            {
+                Items = new List<Product> { new Product { Id = productId, Name = productName } },
+                Page = page,
+                PageSize = pageSize
+            };
+
+            _mockGamesService
+                .Setup(s => s.GetPaginatedGames(It.IsAny<GameFilterAndSortModel>(), It.IsAny<PaginationRequestModel>()))
+                .ReturnsAsync(paginatedGames);
+
+            var filterDto = new GameFilterAndSortRequestDto
+            {
+                Genres = new List<string> { genre },
+                Age = Rating.Six,
+                SortBy = SortByField.Price,
+                SortOrder = SortOrder.Asc
+            };
+
+            var paginationDto = new PaginationRequestDto { Page = page, PageSize = pageSize };
+
+            var result = await _controller
+                .GetGameList(filterDto, paginationDto);
+
+            var okResult = Assert
+                .IsType<OkObjectResult>(result);
+
+            var model = Assert
+                .IsType<PaginatedResponseModel<Product>>(okResult.Value);
+
+            Assert
+                .Single(model.Items);
+
+            Assert
+                .Equal(page, model.Page);
+
+            Assert
+                .Equal(pageSize, model.PageSize);
         }
     }
 }
