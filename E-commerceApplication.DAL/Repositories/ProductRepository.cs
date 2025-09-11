@@ -85,5 +85,52 @@ namespace E_commerceApplication.DAL.Repositories
             await _context
                 .SaveChangesAsync();
         }
+
+        public IQueryable<Product> GetFilteredProducts(List<string> genres, Rating age)
+        {
+            IQueryable<Product> query = _context
+                .Products
+                .AsQueryable();
+
+            query = query
+                .Where(p => genres.Contains(p.Genre));
+
+            query = query
+                .Where(p => p.Rating >= age || p.Rating == Rating.All);
+
+            return query;
+        }
+
+        public IQueryable<Product> GetSortedProducts(IQueryable<Product> query, 
+            SortByField sortByField, SortOrder sortOrder)
+        {
+            switch (sortByField)
+            {
+                case SortByField.Rating:
+                    query = sortOrder == SortOrder.Desc
+                        ? query.OrderByDescending(p => p.TotalRating)
+                        : query.OrderBy(p => p.TotalRating);
+                break;
+                case SortByField.Price:
+                    query = sortOrder == SortOrder.Desc
+                        ? query.OrderByDescending(p => p.Price)
+                        : query.OrderBy(p => p.Price);
+                break;
+            }
+
+            return query;
+        }
+
+        public async Task<List<Product>> GetPaginationProductItems(IQueryable<Product> filteredAndSortedGames, 
+            int page, int pageSize)
+        {
+            int pageIndex = 1;
+            int currentPage = page - pageIndex;
+
+            return await filteredAndSortedGames
+                .Skip(currentPage * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
     }
 }
