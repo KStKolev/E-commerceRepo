@@ -13,6 +13,8 @@ namespace E_commerceApplication.DAL.Data
 
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<ProductRating> ProductRatings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -22,12 +24,24 @@ namespace E_commerceApplication.DAL.Data
                 .HasQueryFilter(p => !p.IsDeleted);
 
             builder
+                .Entity<ProductRating>()
+                .HasQueryFilter(pr => !pr.IsDeleted);
+
+            builder
                 .Entity<Product>()
                 .HasIndex(p => p.Name);
 
             builder
                 .Entity<Product>()
+                .HasIndex(p => p.Genre);
+
+            builder
+                .Entity<Product>()
                 .HasIndex(p => p.Platform);
+
+            builder
+                .Entity<Product>()
+                .HasIndex(p => p.Rating);
 
             builder
                 .Entity<Product>()
@@ -43,12 +57,27 @@ namespace E_commerceApplication.DAL.Data
                 .HasColumnType("decimal(18,2)");
 
             builder
+                .Entity<ProductRating>()
+                .HasKey(pr => new { pr.ProductId, pr.UserId });
+
+            builder
+                .Entity<ProductRating>()
+                .HasOne(pr => pr.Product)
+                .WithMany(p => p.Ratings);
+
+            builder
+                .Entity<ProductRating>()
+                .HasOne(pr => pr.User)
+                .WithMany(u => u.Ratings);
+
+            builder
                 .Entity<Product>()
                 .HasData(
                     new Product
                     {
                         Id = 1,
                         Name = "Halo Infinite",
+                        Genre = "Shooter",
                         Platform = Platforms.Web,
                         DateCreated = new DateTime(2021, 12, 8),
                         TotalRating = 20,
@@ -58,6 +87,7 @@ namespace E_commerceApplication.DAL.Data
                     {
                         Id = 2,
                         Name = "God of War",
+                        Genre = "Action",
                         Platform = Platforms.Mobile,
                         DateCreated = new DateTime(2018, 4, 20),
                         TotalRating = 44,
@@ -67,6 +97,7 @@ namespace E_commerceApplication.DAL.Data
                     {
                         Id = 3,
                         Name = "Half-Life: Alyx",
+                        Genre = "Shooter",
                         Platform = Platforms.Web,
                         DateCreated = new DateTime(2020, 3, 23),
                         TotalRating = 59,
@@ -76,6 +107,7 @@ namespace E_commerceApplication.DAL.Data
                     {
                         Id = 4,
                         Name = "The Legend of Zelda: Breath of the Wild",
+                        Genre = "Adventure",
                         Platform = Platforms.Desktop,
                         DateCreated = new DateTime(2017, 3, 3),
                         TotalRating = 72,
@@ -85,6 +117,7 @@ namespace E_commerceApplication.DAL.Data
                     {
                         Id = 5,
                         Name = "Elden Ring",
+                        Genre = "RPG",
                         Platform = Platforms.Console,
                         DateCreated = new DateTime(2022, 2, 25),
                         TotalRating = 86,

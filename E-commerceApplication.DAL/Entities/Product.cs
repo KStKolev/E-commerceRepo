@@ -28,5 +28,8 @@ namespace E_commerceApplication.DAL.Entities
         public bool IsDeleted { get; set; } = false;
 
         public int TotalRating { get; set; }
+
+        public ICollection<ProductRating> Ratings { get; set; } = 
+            new List<ProductRating>();
     }
 }
