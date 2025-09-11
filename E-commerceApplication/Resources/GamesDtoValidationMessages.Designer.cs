@@ -88,6 +88,60 @@ namespace E_commerceApplication.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid age rating filter.
+        /// </summary>
+        public static string InvalidAgeFilter {
+            get {
+                return ResourceManager.GetString("InvalidAgeFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid genre fields.
+        /// </summary>
+        public static string InvalidGenres {
+            get {
+                return ResourceManager.GetString("InvalidGenres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid sort field.
+        /// </summary>
+        public static string InvalidSort {
+            get {
+                return ResourceManager.GetString("InvalidSort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid sort order.
+        /// </summary>
+        public static string InvalidSortOrder {
+            get {
+                return ResourceManager.GetString("InvalidSortOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Both sort by and sort order must be provided together.
+        /// </summary>
+        public static string InvalidSortOrderAndBy {
+            get {
+                return ResourceManager.GetString("InvalidSortOrderAndBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Products are required.
+        /// </summary>
+        public static string ListProductRequired {
+            get {
+                return ResourceManager.GetString("ListProductRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logo is required.
         /// </summary>
         public static string LogoRequired {
@@ -120,6 +174,15 @@ namespace E_commerceApplication.Resources {
         public static string PriceRequired {
             get {
                 return ResourceManager.GetString("PriceRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Product ID is required.
+        /// </summary>
+        public static string ProductIdRequired {
+            get {
+                return ResourceManager.GetString("ProductIdRequired", resourceCulture);
             }
         }
         

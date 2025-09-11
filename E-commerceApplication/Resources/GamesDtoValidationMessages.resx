@@ -141,4 +141,25 @@
   <data name="RatingRequired" xml:space="preserve">
     <value>Rating is required</value>
   </data>
+  <data name="ProductIdRequired" xml:space="preserve">
+    <value>Product ID is required</value>
+  </data>
+  <data name="ListProductRequired" xml:space="preserve">
+    <value>Products are required</value>
+  </data>
+  <data name="InvalidAgeFilter" xml:space="preserve">
+    <value>Invalid age rating filter</value>
+  </data>
+  <data name="InvalidSort" xml:space="preserve">
+    <value>Invalid sort field</value>
+  </data>
+  <data name="InvalidSortOrder" xml:space="preserve">
+    <value>Invalid sort order</value>
+  </data>
+  <data name="InvalidSortOrderAndBy" xml:space="preserve">
+    <value>Both sort by and sort order must be provided together</value>
+  </data>
+  <data name="InvalidGenres" xml:space="preserve">
+    <value>Invalid genre fields</value>
+  </data>
 </root>
