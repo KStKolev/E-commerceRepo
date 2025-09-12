@@ -221,13 +221,15 @@ namespace E_commerceApplication.Controllers
         [HttpPost("rating")]
         public async Task<IActionResult> EditRating([FromBody] EditRatingRequestDto editRatingRequestDto) 
         {
-            string userId = User
+            string? userId = User
                 .FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+
+            Guid.TryParse(userId, out Guid result);
 
             EditRatingModel editRatingModel = new EditRatingModel
             {
                 ProductId = editRatingRequestDto.ProductId,
-                UserId = Guid.Parse(userId),
+                UserId = result,
                 Rating = editRatingRequestDto.Rating
             };
 
@@ -255,12 +257,14 @@ namespace E_commerceApplication.Controllers
         [HttpDelete("rating")]
         public async Task<IActionResult> DeleteRating([FromBody] DeleteRatingRequestDto deleteRatingRequestDto)
         {
-            string userId = User
+            string? userId = User
                 .FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+
+            Guid.TryParse(userId, out Guid result);
 
             DeleteRatingModel deleteRatingModel = new DeleteRatingModel
             {
-                UserId = Guid.Parse(userId),
+                UserId = result,
                 ProductIds = deleteRatingRequestDto.ProductIds
             };
 
