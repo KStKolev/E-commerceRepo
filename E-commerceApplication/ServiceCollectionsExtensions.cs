@@ -4,6 +4,7 @@ using E_commerceApplication.DAL.Data;
 using E_commerceApplication.DAL.Entities;
 using E_commerceApplication.DAL.Interfaces;
 using E_commerceApplication.DAL.Repositories;
+using E_commerceApplication.Validation;
 using Microsoft.AspNetCore.Identity;
 
 namespace E_commerceApplication
@@ -32,6 +33,13 @@ namespace E_commerceApplication
                 .AddScoped<IGamesService, GamesService>();
             services
                 .AddScoped<IImageService, ImageService>();
+            services
+                .AddScoped<IRatingService, RatingService>();
+            services
+                .AddScoped<IRatingRepository, RatingRepository>();
+
+            services
+                .AddScoped<ValidateGameListParamsAttribute>();
 
             return services;
         }

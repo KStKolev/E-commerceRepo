@@ -47,6 +47,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ControllerExceptionMessages.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\GamesControllerFailedActionsMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GamesControllerFailedActionsMessages.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\GamesDtoValidationMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -62,6 +67,10 @@
     <EmbeddedResource Update="Resources\ControllerExceptionMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ControllerExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\GamesControllerFailedActionsMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GamesControllerFailedActionsMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\GamesDtoValidationMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

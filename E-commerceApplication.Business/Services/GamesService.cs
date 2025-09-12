@@ -90,5 +90,34 @@ namespace E_commerceApplication.Business.Services
             await _productRepository
                 .UpdateProductAsync(product);
         }
+
+        public async Task<PaginatedResponseModel<Product>> GetPaginatedGames(GameFilterAndSortModel gameListModel,
+            PaginationRequestModel paginationRequestModel)
+        {
+            List<string> genres = gameListModel.Genres;
+            Rating age = gameListModel.Age;
+
+            IQueryable<Product> filteredGames =  _productRepository
+                .GetFilteredProducts(genres, age);
+
+            SortByField sortBy = gameListModel.SortBy;
+            SortOrder sortOrder = gameListModel.SortOrder;
+
+            IQueryable<Product> filteredAndSortedGames = _productRepository
+                .GetSortedProducts(filteredGames, sortBy, sortOrder);
+
+            int page = paginationRequestModel.Page;
+            int pageSize = paginationRequestModel.PageSize;
+
+            List<Product> items = await _productRepository
+                .GetPaginationProductItems(filteredAndSortedGames, page, pageSize);
+
+            return new PaginatedResponseModel<Product>
+            {
+                Items = items,
+                Page = page,
+                PageSize = pageSize
+            };
+        }
     }
 }
