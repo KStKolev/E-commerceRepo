@@ -92,8 +92,11 @@ namespace E_commerceApplication.DAL.Repositories
                 .Products
                 .AsQueryable();
 
-            query = query
-                .Where(p => genres.Contains(p.Genre));
+            if (genres.Any())
+            {
+                query = query
+                    .Where(p => genres.Contains(p.Genre));
+            }
 
             query = query
                 .Where(p => p.Rating >= age || p.Rating == Rating.All);

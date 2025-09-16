@@ -15,7 +15,5 @@ namespace E_commerceApplication.DAL.Entities
         public ApplicationUser User { get; set; } = null!;
 
         public int Rating { get; set; }
-
-        public bool IsDeleted { get; set; } = false;
     }
 }

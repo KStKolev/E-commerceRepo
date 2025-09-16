@@ -1,15 +1,11 @@
-﻿using E_commerceApplication.DAL.Entities;
-
-namespace E_commerceApplication.DAL.Interfaces
+﻿namespace E_commerceApplication.DAL.Interfaces
 {
     public interface IRatingRepository
     {
-        Task EditRatingProductAsync(Product product, ApplicationUser user, int rating);
+        Task EditRatingProductAsync(int productId, Guid userId, int rating);
 
-        Task DeleteRatingsAsync(ApplicationUser user, List<Product> products);
+        Task DeleteRatingsAsync(Guid userId, List<int> productIdsList);
 
-        Task<Product?> GetProductWithRatingsAsync(int productId);
-
-        Task<ApplicationUser?> GetUserWithRatingsAsync(Guid userId);
+        Task<bool> CheckProductWithIdAsync(int productId);
     }
 }

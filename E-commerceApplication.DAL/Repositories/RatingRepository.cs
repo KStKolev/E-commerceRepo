@@ -14,11 +14,11 @@ namespace E_commerceApplication.DAL.Repositories
             _context = context;
         }
 
-        public async Task EditRatingProductAsync(Product product, ApplicationUser user, int rating)
+        public async Task EditRatingProductAsync(int productId, Guid userId, int rating)
         {
             ProductRating? productRating = await _context
                 .ProductRatings
-                .FirstOrDefaultAsync(pr => pr.ProductId == product.Id && pr.UserId == user.Id);
+                .FirstOrDefaultAsync(pr => pr.ProductId == productId && pr.UserId == userId);
 
             if (productRating != null)
             {
@@ -28,10 +28,8 @@ namespace E_commerceApplication.DAL.Repositories
             {
                 productRating = new ProductRating
                 {
-                    ProductId = product.Id,
-                    Product = product,
-                    UserId = user.Id,
-                    User = user,
+                    ProductId = productId,
+                    UserId = userId,
                     Rating = rating
                 };
 
@@ -40,55 +38,32 @@ namespace E_commerceApplication.DAL.Repositories
                     .AddAsync(productRating);
             }
 
-            product.TotalRating = product.Ratings
-                .Sum(r => r.Rating);
-
             await _context
                 .SaveChangesAsync();
         }
 
-        public async Task DeleteRatingsAsync(ApplicationUser user, List<Product> products)
+        public async Task DeleteRatingsAsync(Guid userId, List<int> productIdList)
         {
-            foreach (Product product in products)
-            {
-                ProductRating? productRating = _context.ProductRatings
-                    .FirstOrDefault(pr => pr.ProductId == product.Id && pr.UserId == user.Id);
+            HashSet<int> productIdSet = new(productIdList);
 
-                if (productRating == null)
-                {
-                    continue;
-                }
+            List<ProductRating> productRatingList = await _context
+                .ProductRatings
+                .Where(pr => pr.UserId == userId && productIdSet.Contains(pr.ProductId))
+                .ToListAsync();
 
-                user.Ratings
-                    .Remove(productRating);
-
-                product.Ratings
-                    .Remove(productRating);
-
-                product.TotalRating = product.Ratings
-                    .Sum(r => r.Rating);
-
-                productRating.IsDeleted = true;
-            }
+            _context
+                .ProductRatings
+                .RemoveRange(productRatingList);
 
             await _context
                 .SaveChangesAsync();
         }
 
-        public async Task<Product?> GetProductWithRatingsAsync(int productId)
+        public async Task<bool> CheckProductWithIdAsync(int productId)
         {
             return await _context
                 .Products
-                .Include(p => p.Ratings)
-                .FirstOrDefaultAsync(p => p.Id == productId);
-        }
-
-        public async Task<ApplicationUser?> GetUserWithRatingsAsync(Guid userId)
-        {
-            return await _context
-                .Users
-                .Include(u => u.Ratings)
-                .FirstOrDefaultAsync(u => u.Id == userId);
+                .AnyAsync(p => p.Id == productId);
         }
     }
 }
