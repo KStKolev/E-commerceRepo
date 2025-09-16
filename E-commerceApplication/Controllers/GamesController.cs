@@ -90,7 +90,7 @@ namespace E_commerceApplication.Controllers
 
             if (product == null)
             {
-                return NotFound(string.Format(ControllerExceptionMessages.ProductNotFound, id));
+                return NotFound(string.Format(GamesControllerFailedActionsMessages.NotFoundGameRequestMessage));
             }
 
             return Ok(product);
@@ -169,17 +169,15 @@ namespace E_commerceApplication.Controllers
                 Price = updateGameModelDto.Price
             };
 
-            try
-            {
-                await _gamesService
-                    .UpdateGameAsync(updateGameModel);
+            bool isGameUpdated = await _gamesService
+                .UpdateGameAsync(updateGameModel);
 
-                return Ok(updateGameModel);
-            }
-            catch (ArgumentException exception)
+            if (!isGameUpdated) 
             {
-                return NotFound(exception.Message);
+                return BadRequest(GamesControllerFailedActionsMessages.UpdateGameBadRequestMessage);
             }
+
+            return Ok(updateGameModel);
         }
 
         /// <summary>
@@ -195,17 +193,15 @@ namespace E_commerceApplication.Controllers
         [HttpDelete("id/{id}")]
         public async Task<IActionResult> DeleteGame(int id)
         {
-            try
-            {
-                await _gamesService
-                    .DeleteGameAsync(id);
+            bool isDeleted = await _gamesService
+                .DeleteGameAsync(id);
 
-                return NoContent();
-            }
-            catch (ArgumentException)
+            if (!isDeleted) 
             {
-                return NotFound(string.Format(ControllerExceptionMessages.ProductNotFound, id));
+                return BadRequest(string.Format(GamesControllerFailedActionsMessages.DeleteGameBadRequestMessage));
             }
+
+            return NoContent();
         }
 
         /// <summary>
@@ -222,9 +218,12 @@ namespace E_commerceApplication.Controllers
         public async Task<IActionResult> EditRating([FromBody] EditRatingRequestDto editRatingRequestDto) 
         {
             string? userId = User
-                .FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+                .FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            Guid.TryParse(userId, out Guid result);
+            if (!Guid.TryParse(userId, out Guid result))
+            {
+                return Unauthorized(GamesControllerFailedActionsMessages.UserNotAuthorized);
+            }
 
             EditRatingModel editRatingModel = new EditRatingModel
             {
@@ -260,7 +259,10 @@ namespace E_commerceApplication.Controllers
             string? userId = User
                 .FindFirst(ClaimTypes.NameIdentifier)?.Value!;
 
-            Guid.TryParse(userId, out Guid result);
+            if (!Guid.TryParse(userId, out Guid result))
+            {
+                return Unauthorized(GamesControllerFailedActionsMessages.UserNotAuthorized);
+            }
 
             DeleteRatingModel deleteRatingModel = new DeleteRatingModel
             {
@@ -268,13 +270,8 @@ namespace E_commerceApplication.Controllers
                 ProductIds = deleteRatingRequestDto.ProductIds
             };
 
-            bool areDeleted = await _ratingService
+            await _ratingService
                 .DeleteRatingsAsync(deleteRatingModel);
-
-            if (!areDeleted)
-            {
-                return BadRequest(GamesControllerFailedActionsMessages.DeleteRatingsBadRequestMessage);
-            }
 
             return NoContent();
         }
@@ -300,9 +297,7 @@ namespace E_commerceApplication.Controllers
             GameFilterAndSortModel gameFilterAndSortModel = new GameFilterAndSortModel
             {
                 Genres = gameFilterAndSortRequestDto.Genres,
-                Age = gameFilterAndSortRequestDto
-                    .Age
-                    .GetValueOrDefault(),
+                Age = gameFilterAndSortRequestDto.Age,
                 SortBy = gameFilterAndSortRequestDto
                     .SortBy
                     .GetValueOrDefault(),

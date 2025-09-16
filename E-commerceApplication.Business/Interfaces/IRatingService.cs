@@ -6,6 +6,6 @@ namespace E_commerceApplication.Business.Interfaces
     {
         Task<bool> EditRatingGameAsync(EditRatingModel editRatingModel);
 
-        Task<bool> DeleteRatingsAsync(DeleteRatingModel deleteRatingModel);
+        Task DeleteRatingsAsync(DeleteRatingModel deleteRatingModel);
     }
 }

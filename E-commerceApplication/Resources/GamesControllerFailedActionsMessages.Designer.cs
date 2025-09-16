@@ -61,6 +61,15 @@ namespace E_commerceApplication.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bad Game removement request.
+        /// </summary>
+        public static string DeleteGameBadRequestMessage {
+            get {
+                return ResourceManager.GetString("DeleteGameBadRequestMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bad Ratings removement request.
         /// </summary>
         public static string DeleteRatingsBadRequestMessage {
@@ -75,6 +84,33 @@ namespace E_commerceApplication.Resources {
         public static string EditRatingBadRequestMessage {
             get {
                 return ResourceManager.GetString("EditRatingBadRequestMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Found Game request.
+        /// </summary>
+        public static string NotFoundGameRequestMessage {
+            get {
+                return ResourceManager.GetString("NotFoundGameRequestMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad Game update request.
+        /// </summary>
+        public static string UpdateGameBadRequestMessage {
+            get {
+                return ResourceManager.GetString("UpdateGameBadRequestMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User was not authorized.
+        /// </summary>
+        public static string UserNotAuthorized {
+            get {
+                return ResourceManager.GetString("UserNotAuthorized", resourceCulture);
             }
         }
     }

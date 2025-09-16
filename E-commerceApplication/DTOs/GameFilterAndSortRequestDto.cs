@@ -6,7 +6,7 @@ namespace E_commerceApplication.DTOs
     {
         public List<string> Genres { get; set; } = new();
 
-        public Rating? Age { get; set; } 
+        public Rating Age { get; set; }
 
         public SortByField? SortBy { get; set; }
 

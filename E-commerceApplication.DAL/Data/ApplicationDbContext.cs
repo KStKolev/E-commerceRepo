@@ -1,6 +1,7 @@
 ﻿using E_commerceApplication.DAL.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace E_commerceApplication.DAL.Data
 {
@@ -15,6 +16,8 @@ namespace E_commerceApplication.DAL.Data
 
         public DbSet<ProductRating> ProductRatings { get; set; }
 
+        // public DbSet<Order> Orders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -23,9 +26,9 @@ namespace E_commerceApplication.DAL.Data
                 .Entity<Product>()
                 .HasQueryFilter(p => !p.IsDeleted);
 
-            builder
-                .Entity<ProductRating>()
-                .HasQueryFilter(pr => !pr.IsDeleted);
+            /*builder
+                .Entity<Order>()
+                .HasQueryFilter(o => !o.IsDeleted);*/
 
             builder
                 .Entity<Product>()
@@ -69,6 +72,16 @@ namespace E_commerceApplication.DAL.Data
                 .Entity<ProductRating>()
                 .HasOne(pr => pr.User)
                 .WithMany(u => u.Ratings);
+
+           /* builder
+                .Entity<ApplicationUser>()
+                .HasMany(u => u.Orders)
+                .WithOne(o => o.User);
+
+            builder
+                .Entity<Order>()
+                .HasMany(o => o.Products)
+                .WithMany();*/
 
             builder
                 .Entity<Product>()
@@ -124,6 +137,68 @@ namespace E_commerceApplication.DAL.Data
                         Price = 69.99m
                     }
                 );
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            UpdateProductTotalRating();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void UpdateProductTotalRating()
+        {
+            List<EntityEntry<ProductRating>> changed = ChangeTracker
+                .Entries<ProductRating>()
+                .Where(e =>
+                    e.State == EntityState.Added 
+                    || e.State == EntityState.Modified
+                    || e.State == EntityState.Deleted)
+                .ToList();
+
+            foreach (EntityEntry<ProductRating> entry in changed)
+            {
+                int productId = entry.Entity.ProductId;
+                Product? product = Products
+                    .Find(productId);
+
+                if (product == null)
+                {
+                    continue;
+                }
+
+                List<int> dbRatings = ProductRatings
+                    .Where(pr => pr.ProductId == productId)
+                    .Select(pr => pr.Rating)
+                    .ToList();
+
+                const string propertyName = "Rating";
+
+                foreach (var e in ChangeTracker.Entries<ProductRating>()
+                    .Where(e => e.Entity.ProductId == productId))
+                {
+                    switch (e.State)
+                    {
+                        case EntityState.Added:
+                            dbRatings.Add(e.Entity.Rating);
+                            break;
+                        case EntityState.Modified:
+                            int oldRating = (int) e.OriginalValues[propertyName];
+                            dbRatings.Remove(oldRating);
+                            dbRatings.Add(e.Entity.Rating);
+                            break;
+                        case EntityState.Deleted:
+                            int deletedRating = (int)e.OriginalValues[propertyName];
+                            dbRatings.Remove(deletedRating);
+                            break;
+                    }
+                }
+
+                product.TotalRating = dbRatings
+                    .DefaultIfEmpty()
+                    .Average();
+
+                Entry(product).State = EntityState.Modified;
+            }
         }
     }
 }

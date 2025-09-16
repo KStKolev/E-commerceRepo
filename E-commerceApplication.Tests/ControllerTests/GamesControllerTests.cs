@@ -4,11 +4,10 @@ using E_commerceApplication.Controllers;
 using E_commerceApplication.DAL.Entities;
 using E_commerceApplication.DTOs;
 using E_commerceApplication.Resources;
-using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Moq;
-using System.Security.Claims;
 
 namespace E_commerceApplication.Tests.ControllerTests
 {
@@ -32,12 +31,12 @@ namespace E_commerceApplication.Tests.ControllerTests
         [Fact]
         public async Task GetTopPlatforms_ReturnsOkResult_WithListOfPlatforms()
         {
-            List<Platforms> platforms = new() { Platforms.Web, Platforms.Desktop, Platforms.Console };
+            var platforms = new List<Platforms>() { Platforms.Web, Platforms.Desktop, Platforms.Console };
             int takeCount = 3;
 
             _mockGamesService
                 .Setup(service => service.GetTopGamePlatformsAsync())
-                .ReturnsAsync(platforms);
+                    .ReturnsAsync(platforms);
 
             var result = await _controller
                 .GetTopPlatforms();
@@ -59,7 +58,7 @@ namespace E_commerceApplication.Tests.ControllerTests
             int limit = 5;
             int offset = 0;
 
-            List<Product> products = new()
+            var products = new List<Product>()
             {
                 new Product { Id = 1, Name = "Game 1" },
                 new Product { Id = 2, Name = "Game 2" }
@@ -67,8 +66,8 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             _mockGamesService
                 .Setup(service => service
-                .GetSearchedGamesAsync(term, limit, offset))
-                .ReturnsAsync(products);
+                    .GetSearchedGamesAsync(term, limit, offset))
+                    .ReturnsAsync(products);
 
             var result = await _controller
                 .GetSearchedData(term, limit, offset);
@@ -88,11 +87,11 @@ namespace E_commerceApplication.Tests.ControllerTests
         {
             int gameId = 1;
             string gameName = "Game 1";
-            Product product = new() { Id = gameId, Name = gameName };
+            var product = new Product() { Id = gameId, Name = gameName };
 
             _mockGamesService
                 .Setup(s => s.GetGameByIdAsync(gameId))
-                .ReturnsAsync(product);
+                    .ReturnsAsync(product);
 
             var result = await _controller
                 .GetGameById(gameId);
@@ -111,13 +110,17 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             _mockGamesService
                 .Setup(s => s.GetGameByIdAsync(gameId))
-                .ReturnsAsync((Product?)null);
+                    .ReturnsAsync((Product?)null);
 
             var result = await _controller
                 .GetGameById(gameId);
 
-            Assert
+            var notFoundResult = Assert
                 .IsType<NotFoundObjectResult>(result);
+
+            Assert
+                .Equal(GamesControllerFailedActionsMessages.NotFoundGameRequestMessage,
+                notFoundResult.Value);
         }
 
         [Fact]
@@ -139,19 +142,19 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             logoFileMock
                 .Setup(f => f.FileName)
-                .Returns(logoFileName);
+                    .Returns(logoFileName);
 
             logoFileMock
                 .Setup(f => f.OpenReadStream())
-                .Returns(new MemoryStream());
+                    .Returns(new MemoryStream());
 
             backgroundFileMock
                 .Setup(f => f.FileName)
-                .Returns(backgroundFileName);
+                    .Returns(backgroundFileName);
 
             backgroundFileMock
                 .Setup(f => f.OpenReadStream())
-                .Returns(new MemoryStream());
+                    .Returns(new MemoryStream());
 
             var gameDto = new GamesDto
             {
@@ -177,7 +180,7 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             _mockGamesService
                 .Setup(s => s.CreateGameAsync(It.IsAny<GamesModel>()))
-                .ReturnsAsync(gameId);
+                    .ReturnsAsync(gameId);
 
             var result = await _controller
                 .CreateGame(gameDto);
@@ -213,19 +216,19 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             logoFileMock
                 .Setup(f => f.FileName)
-                .Returns(logoName);
+                    .Returns(logoName);
 
             logoFileMock
                 .Setup(f => f.OpenReadStream())
-                .Returns(new MemoryStream());
+                    .Returns(new MemoryStream());
 
             backgroundFileMock
                 .Setup(f => f.FileName)
-                .Returns(backgroundName);
+                    .Returns(backgroundName);
 
             backgroundFileMock
                 .Setup(f => f.OpenReadStream())
-                .Returns(new MemoryStream());
+                    .Returns(new MemoryStream());
 
             var updateDto = new UpdateGamesDto
             {
@@ -242,15 +245,15 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             _mockImageService
                 .Setup(s => s.UploadImageAsync(updateDto.Logo))
-                .ReturnsAsync(logoUrl);
+                    .ReturnsAsync(logoUrl);
 
             _mockImageService
                 .Setup(s => s.UploadImageAsync(updateDto.Background))
-                .ReturnsAsync(backgroundUrl);
+                    .ReturnsAsync(backgroundUrl);
 
             _mockGamesService
                 .Setup(s => s.UpdateGameAsync(It.IsAny<UpdateGamesModel>()))
-                .Returns(Task.CompletedTask);
+                    .ReturnsAsync(true);
 
             var result = await _controller
                 .UpdateGame(updateDto);
@@ -269,11 +272,10 @@ namespace E_commerceApplication.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task UpdateGame_NonExistentGame_ReturnsNotFound()
+        public async Task UpdateGame_NonExistentGame_ReturnsBadRequest()
         {
             int gameId = 99;
             string gameName = "Missing Game";
-            string notFoundMessage = "Product not found";
 
             var dto = new UpdateGamesDto
             {
@@ -283,13 +285,17 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             _mockGamesService
                 .Setup(s => s.UpdateGameAsync(It.IsAny<UpdateGamesModel>()))
-                .ThrowsAsync(new ArgumentException(notFoundMessage));
+                    .ReturnsAsync(false);
 
             var result = await _controller
                 .UpdateGame(dto);
 
+            var badRequestResult = Assert
+                .IsType<BadRequestObjectResult>(result);
+
             Assert
-                .IsType<NotFoundObjectResult>(result);
+                .Equal(GamesControllerFailedActionsMessages.UpdateGameBadRequestMessage,
+                badRequestResult.Value);
         }
 
         [Fact]
@@ -297,15 +303,15 @@ namespace E_commerceApplication.Tests.ControllerTests
         {
             int gameId = 1;
             string gameName = "Test Game";
-            Product product = new() { Id = gameId, Name = gameName };
+            var product = new Product() { Id = gameId, Name = gameName };
 
             _mockGamesService
                 .Setup(s => s.GetGameByIdAsync(gameId))
-                .ReturnsAsync(product);
+                    .ReturnsAsync(product);
 
             _mockGamesService
                 .Setup(s => s.DeleteGameAsync(gameId))
-                .Returns(Task.CompletedTask);
+                    .ReturnsAsync(true);
 
             var result = await _controller
                 .DeleteGame(gameId);
@@ -315,20 +321,23 @@ namespace E_commerceApplication.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task DeleteGame_GameDoesNotExist_ReturnsNotFound()
+        public async Task DeleteGame_GameDoesNotExist_ReturnsBadRequest()
         {
             int gameId = 1;
-            string exceptionMessage = "Product not found";
 
             _mockGamesService
                 .Setup(s => s.DeleteGameAsync(gameId))
-                .ThrowsAsync(new ArgumentException(exceptionMessage));
+                    .ReturnsAsync(false);
 
             var result = await _controller
                 .DeleteGame(gameId);
 
+            var badRequestResult = Assert
+                .IsType<BadRequestObjectResult>(result);
+
             Assert
-                .IsType<NotFoundObjectResult>(result);
+                .Equal(GamesControllerFailedActionsMessages.DeleteGameBadRequestMessage,
+                badRequestResult.Value);
         }
 
         [Fact]
@@ -351,7 +360,7 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             _mockRatingService
                 .Setup(s => s.EditRatingGameAsync(It.IsAny<EditRatingModel>()))
-                .ReturnsAsync(true);
+                    .ReturnsAsync(true);
 
             var result = await _controller
                 .EditRating(dto);
@@ -392,7 +401,7 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             _mockRatingService
                 .Setup(s => s.EditRatingGameAsync(It.IsAny<EditRatingModel>()))
-                .ReturnsAsync(false);
+                    .ReturnsAsync(false);
 
             var result = await _controller
                 .EditRating(dto);
@@ -423,7 +432,7 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             _mockRatingService
                 .Setup(s => s.DeleteRatingsAsync(It.IsAny<DeleteRatingModel>()))
-                .ReturnsAsync(true);
+                    .Returns(Task.CompletedTask);
 
             var result = await _controller
                 .DeleteRating(dto);
@@ -431,38 +440,7 @@ namespace E_commerceApplication.Tests.ControllerTests
             Assert
                 .IsType<NoContentResult>(result);
         }
-
-        [Fact]
-        public async Task DeleteRating_ReturnsBadRequest_WhenDeleteFails()
-        {
-            var userId = Guid
-                .NewGuid();
-
-            ControllerTestHelper
-                .SetUser(_controller, userId);
-
-            int productId1 = 1;
-            int productId2 = 2;
-
-            var dto = new DeleteRatingRequestDto
-            {
-                ProductIds = new List<int> { productId1, productId2 }
-            };
-
-            _mockRatingService
-                .Setup(s => s.DeleteRatingsAsync(It.IsAny<DeleteRatingModel>()))
-                .ReturnsAsync(false);
-
-            var result = await _controller
-                .DeleteRating(dto);
-
-            var badRequestResult = Assert
-                .IsType<BadRequestObjectResult>(result);
-
-            Assert
-                .Equal(GamesControllerFailedActionsMessages.DeleteRatingsBadRequestMessage, badRequestResult.Value);
-        }
-
+        
         [Fact]
         public async Task GetGameList_ReturnsOk_WithPaginatedGames()
         {
@@ -481,7 +459,7 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             _mockGamesService
                 .Setup(s => s.GetPaginatedGames(It.IsAny<GameFilterAndSortModel>(), It.IsAny<PaginationRequestModel>()))
-                .ReturnsAsync(paginatedGames);
+                    .ReturnsAsync(paginatedGames);
 
             var filterDto = new GameFilterAndSortRequestDto
             {

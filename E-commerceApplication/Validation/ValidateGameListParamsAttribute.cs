@@ -11,19 +11,18 @@ namespace E_commerceApplication.Validation
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             string actionParameterName = "gameFilterAndSortRequestDto";
-            int emptyGenreCount = 0;
 
             List<string> errors = new();
 
             if (context.ActionArguments.TryGetValue(actionParameterName, out var arg) 
                 && arg is GameFilterAndSortRequestDto dto)
             {
-                if (dto.Genres.Any(string.IsNullOrWhiteSpace) || dto.Genres.Count == emptyGenreCount)
+                if (dto.Genres.Any(string.IsNullOrWhiteSpace))
                 {
                     errors.Add(GamesDtoValidationMessages.InvalidGenres);
                 }
 
-                if (dto.Age == null || !Enum.IsDefined(typeof(Rating), dto.Age))
+                if (!Enum.IsDefined(typeof(Rating), dto.Age))
                 {
                     errors.Add(GamesDtoValidationMessages.InvalidAgeFilter);
                 }
