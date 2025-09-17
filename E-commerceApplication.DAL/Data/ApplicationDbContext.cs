@@ -16,6 +16,8 @@ namespace E_commerceApplication.DAL.Data
 
         public DbSet<ProductRating> ProductRatings { get; set; }
 
+        //public DbSet<Order> Orders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -23,6 +25,10 @@ namespace E_commerceApplication.DAL.Data
             builder
                 .Entity<Product>()
                 .HasQueryFilter(p => !p.IsDeleted);
+
+/*            builder
+                .Entity<Order>()
+                .HasQueryFilter(o => !o.IsDeleted);*/
 
             builder
                 .Entity<Product>()
@@ -67,6 +73,16 @@ namespace E_commerceApplication.DAL.Data
                 .HasOne(pr => pr.User)
                 .WithMany(u => u.Ratings);
 
+            /*builder
+                .Entity<ApplicationUser>()
+                .HasMany(u => u.Orders)
+                .WithOne(o => o.User);
+
+            builder
+                .Entity<Order>()
+                .HasMany(o => o.Products)
+                .WithMany();*/
+
             builder
                 .Entity<Product>()
                 .HasData(
@@ -77,7 +93,7 @@ namespace E_commerceApplication.DAL.Data
                         Genre = "Shooter",
                         Platform = Platforms.Web,
                         DateCreated = new DateTime(2021, 12, 8),
-                        TotalRating = 20,
+                        TotalRating = 0,
                         Price = 59.99m
                     },
                     new Product
@@ -87,7 +103,7 @@ namespace E_commerceApplication.DAL.Data
                         Genre = "Action",
                         Platform = Platforms.Mobile,
                         DateCreated = new DateTime(2018, 4, 20),
-                        TotalRating = 44,
+                        TotalRating = 0,
                         Price = 39.99m
                     },
                     new Product
@@ -97,7 +113,7 @@ namespace E_commerceApplication.DAL.Data
                         Genre = "Shooter",
                         Platform = Platforms.Web,
                         DateCreated = new DateTime(2020, 3, 23),
-                        TotalRating = 59,
+                        TotalRating = 0,
                         Price = 49.99m
                     },
                     new Product
@@ -107,7 +123,7 @@ namespace E_commerceApplication.DAL.Data
                         Genre = "Adventure",
                         Platform = Platforms.Desktop,
                         DateCreated = new DateTime(2017, 3, 3),
-                        TotalRating = 72,
+                        TotalRating = 0,
                         Price = 59.99m
                     },
                     new Product
@@ -117,7 +133,7 @@ namespace E_commerceApplication.DAL.Data
                         Genre = "RPG",
                         Platform = Platforms.Console,
                         DateCreated = new DateTime(2022, 2, 25),
-                        TotalRating = 86,
+                        TotalRating = 0,
                         Price = 69.99m
                     }
                 );
@@ -155,26 +171,20 @@ namespace E_commerceApplication.DAL.Data
                     .Select(pr => pr.Rating)
                     .ToList();
 
-                const string propertyName = "Rating";
-
-                foreach (var e in ChangeTracker.Entries<ProductRating>()
-                    .Where(e => e.Entity.ProductId == productId))
+                switch (entry.State)
                 {
-                    switch (e.State)
-                    {
-                        case EntityState.Added:
-                            dbRatings.Add(e.Entity.Rating);
-                            break;
-                        case EntityState.Modified:
-                            int oldRating = (int) e.OriginalValues[propertyName]!;
-                            dbRatings.Remove(oldRating);
-                            dbRatings.Add(e.Entity.Rating);
-                            break;
-                        case EntityState.Deleted:
-                            int deletedRating = (int) e.OriginalValues[propertyName]!;
-                            dbRatings.Remove(deletedRating);
-                            break;
-                    }
+                    case EntityState.Added:
+                        dbRatings.Add(entry.Entity.Rating);
+                        break;
+                    case EntityState.Modified:
+                        int oldRating = (int) entry.OriginalValues[nameof(entry.Entity.Rating)]!;
+                        dbRatings.Remove(oldRating);
+                        dbRatings.Add(entry.Entity.Rating);
+                        break;
+                    case EntityState.Deleted:
+                        int deletedRating = (int) entry.OriginalValues[nameof(entry.Entity.Rating)]!;
+                        dbRatings.Remove(deletedRating);
+                        break;
                 }
 
                 product.TotalRating = dbRatings

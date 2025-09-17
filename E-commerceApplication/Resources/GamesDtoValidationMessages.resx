@@ -162,4 +162,7 @@
   <data name="InvalidGenres" xml:space="preserve">
     <value>Invalid genre fields</value>
   </data>
+  <data name="InvalidRating" xml:space="preserve">
+    <value>The rating is from 1 to 5</value>
+  </data>
 </root>

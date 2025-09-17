@@ -106,6 +106,15 @@ namespace E_commerceApplication.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The rating is from 1 to 5.
+        /// </summary>
+        public static string InvalidRating {
+            get {
+                return ResourceManager.GetString("InvalidRating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid sort field.
         /// </summary>
         public static string InvalidSort {
