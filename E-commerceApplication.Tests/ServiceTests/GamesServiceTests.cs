@@ -38,15 +38,22 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             _productRepositoryMock
                 .Setup(repo => repo.SearchProductsAsync(searchTerm, limit, offset))
-                .ReturnsAsync(products.Where(p => p.Name.Contains(searchTerm)).ToList());
+                    .ReturnsAsync(products.Where(p => p.Name.Contains(searchTerm)).ToList());
 
             var result = await _gamesService
                 .GetSearchedGamesAsync(searchTerm, limit, offset);
 
-            Assert.NotNull(result);
-            Assert.Equal(resultCount, result.Count);
-            Assert.Contains(result, p => p.Name == productName1);
-            Assert.Contains(result, p => p.Name == productName2);
+            Assert
+                .NotNull(result);
+
+            Assert
+                .Equal(resultCount, result.Count);
+
+            Assert
+                .Contains(result, p => p.Name == productName1);
+
+            Assert
+                .Contains(result, p => p.Name == productName2);
         }
 
         [Fact]
@@ -58,19 +65,25 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             _productRepositoryMock
                 .Setup(repo => repo.SearchProductsAsync(searchTerm, limit, offset))
-                .ReturnsAsync(new List<Product>());
+                    .ReturnsAsync(new List<Product>());
 
             var result = await _gamesService
                 .GetSearchedGamesAsync(searchTerm, limit, offset);
 
-            Assert.NotNull(result);
-            Assert.Empty(result);
+            Assert
+                .NotNull(result);
+
+            Assert
+                .Empty(result);
         }
 
         [Fact]
         public async Task GetMostPopularPlatformsAsync_ShouldReturnTopPlatforms()
         {
             int topPlatformsAmount = 3;
+            int platformIndex1 = 0;
+            int platformIndex2 = 1;
+            var platformIndex3 = 2;
 
             var platforms = new List<Platforms>
             {
@@ -81,16 +94,25 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             _productRepositoryMock
                 .Setup(repo => repo.GetTopProductPlatformsAsync())
-                .ReturnsAsync(platforms);
+                    .ReturnsAsync(platforms);
 
             var result = await _gamesService
                 .GetTopGamePlatformsAsync();
 
-            Assert.NotNull(result);
-            Assert.Equal(topPlatformsAmount, result.Count);
-            Assert.Equal(Platforms.Web, result[0]);
-            Assert.Equal(Platforms.Mobile, result[1]);
-            Assert.Equal(Platforms.Desktop, result[2]);
+            Assert
+                .NotNull(result);
+
+            Assert
+                .Equal(topPlatformsAmount, result.Count);
+
+            Assert
+                .Equal(Platforms.Web, result[platformIndex1]);
+
+            Assert
+                .Equal(Platforms.Mobile, result[platformIndex2]);
+
+            Assert
+                .Equal(Platforms.Desktop, result[platformIndex3]);
         }
 
         [Fact]
@@ -98,13 +120,16 @@ namespace E_commerceApplication.Tests.ServiceTests
         {
             _productRepositoryMock
                 .Setup(repo => repo.GetTopProductPlatformsAsync())
-                .ReturnsAsync(new List<Platforms>());
+                    .ReturnsAsync(new List<Platforms>());
 
             var result = await _gamesService
                 .GetTopGamePlatformsAsync();
 
-            Assert.NotNull(result);
-            Assert.Empty(result);
+            Assert
+                .NotNull(result);
+
+            Assert
+                .Empty(result);
         }
 
         [Fact]
@@ -122,7 +147,7 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             _productRepositoryMock
                 .Setup(repo => repo.GetProductByIdAsync(gameId))
-                .ReturnsAsync(product);
+                    .ReturnsAsync(product);
 
             var result = await _gamesService
                 .GetGameByIdAsync(gameId);
@@ -141,12 +166,13 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             _productRepositoryMock
                 .Setup(repo => repo.GetProductByIdAsync(gameId))
-                .ReturnsAsync((Product?)null);
+                    .ReturnsAsync((Product?)null);
 
             var result = await _gamesService
                 .GetGameByIdAsync(gameId);
 
-            Assert.Null(result);
+            Assert
+                .Null(result);
         }
 
         [Fact]
@@ -188,7 +214,7 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             _productRepositoryMock
                 .Setup(repo => repo.CreateProductAsync(It.IsAny<Product>()))
-                .ReturnsAsync(createdProduct);
+                    .ReturnsAsync(createdProduct);
 
             var result = await _gamesService
                 .CreateGameAsync(gameModel);
@@ -231,11 +257,11 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             _productRepositoryMock
                 .Setup(repo => repo.GetProductByIdAsync(gameId))
-                .ReturnsAsync(existingProduct);
+                    .ReturnsAsync(existingProduct);
 
             _productRepositoryMock
                 .Setup(repo => repo.UpdateProductAsync(existingProduct))
-                .Returns(Task.CompletedTask)
+                    .Returns(Task.CompletedTask)
                 .Verifiable();
 
             await _gamesService
@@ -270,7 +296,7 @@ namespace E_commerceApplication.Tests.ServiceTests
         }
 
         [Fact]
-        public async Task UpdateGameAsync_ShouldThrowArgumentException_WhenGameDoesNotExist()
+        public async Task UpdateGameAsync_ShouldReturnFalse_WhenGameDoesNotExist()
         {
             int gameId = 1;
             string gameName = "Halo Infinite updated";
@@ -279,7 +305,6 @@ namespace E_commerceApplication.Tests.ServiceTests
             string backgroundName = "background_updated.png";
             int count = 150;
             decimal price = 49.99m;
-            string productNotFoundMessage = "Product not found";
 
             var updatedGameModel = new UpdateGamesModel
             {
@@ -296,13 +321,13 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             _productRepositoryMock
                 .Setup(repo => repo.GetProductByIdAsync(gameId))
-                .ReturnsAsync((Product?)null);
+                    .ReturnsAsync((Product?)null);
 
-            var exception = await Assert
-                .ThrowsAsync<ArgumentException>(async () => await _gamesService.UpdateGameAsync(updatedGameModel));
+            bool result = await _gamesService
+                .UpdateGameAsync(updatedGameModel);
 
             Assert
-                .Equal(productNotFoundMessage, exception.Message);
+                .False(result);
         }
 
         [Fact]
@@ -320,11 +345,11 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             _productRepositoryMock
                 .Setup(repo => repo.GetProductByIdAsync(gameId))
-                .ReturnsAsync(product);
+                    .ReturnsAsync(product);
 
             _productRepositoryMock
                 .Setup(repo => repo.DeleteProductAsync(product))
-                .Returns(Task.CompletedTask)
+                    .Returns(Task.CompletedTask)
                 .Verifiable();
 
             await _gamesService
@@ -335,20 +360,145 @@ namespace E_commerceApplication.Tests.ServiceTests
         }
 
         [Fact]
-        public async Task DeleteGameAsync_ShouldThrowArgumentException_WhenGameDoesNotExist()
+        public async Task DeleteGameAsync_ShouldReturnFalse_WhenGameDoesNotExist()
         {
             int gameId = 1;
-            string productNotFoundMessage = "Product not found";
 
             _productRepositoryMock
                 .Setup(repo => repo.GetProductByIdAsync(gameId))
-                .ReturnsAsync((Product?)null);
+                    .ReturnsAsync((Product?)null);
 
-            var exception = await Assert
-                .ThrowsAsync<ArgumentException>(async () => await _gamesService.DeleteGameAsync(gameId));
+            bool result = await _gamesService
+                .DeleteGameAsync(gameId);
 
             Assert
-                .Equal(productNotFoundMessage, exception.Message);
+                .False(result);
+        }
+
+        [Fact]
+        public async Task GetPaginatedGames_TwoProducts_ReturnsCorrectPage()
+        {
+            int productId1 = 1;
+            int productId2 = 2;
+
+            int totalRating1 = 5;
+            int totalRating2 = 8;
+
+            decimal price1 = 50;
+            decimal price2 = 60;
+
+            int productsCount = 2;
+            int page = 1;
+            int pageSize = 2;
+            int pageIndex = 1;
+
+            int productIndex1 = 0;
+            int productIndex2 = 1;
+
+            var products = new List<Product>
+            {
+                new Product { Id = productId1, TotalRating = totalRating1, Price = price1 },
+                new Product { Id = productId2, TotalRating = totalRating2, Price = price2 }
+            }.AsQueryable();
+
+            _productRepositoryMock
+                .Setup(r => r.GetFilteredProducts(It.IsAny<List<string>>(), It.IsAny<Rating>()))
+                    .Returns(products);
+
+            _productRepositoryMock
+                .Setup(r => r.GetSortedProducts(It.IsAny<IQueryable<Product>>(),
+                    It.IsAny<SortByField>(), It.IsAny<SortOrder>()))
+                    .Returns<IQueryable<Product>, SortByField, SortOrder>((q, s, o) => q);
+
+            _productRepositoryMock
+                .Setup(r => r.GetPaginationProductItems(It.IsAny<IQueryable<Product>>(), 
+                    It.IsAny<int>(), It.IsAny<int>()))
+                    .Returns<IQueryable<Product>, int, int>((q, page, pageSize) =>
+                        Task.FromResult(q.Skip((page - pageIndex) * pageSize)
+                        .Take(pageSize)
+                        .ToList()));
+
+            var filterModel = new GameFilterAndSortModel
+            {
+                Genres = new List<string>(),
+                Age = Rating.All,
+                SortBy = SortByField.Rating,
+                SortOrder = SortOrder.Desc
+            };
+
+            var paginationModel = new PaginationRequestModel
+            {
+                Page = page,
+                PageSize = pageSize
+            };
+
+            PaginatedResponseModel<Product> result = await _gamesService
+                .GetPaginatedGames(filterModel, paginationModel);
+
+            Assert
+                .Equal(productsCount, result.Items.Count);
+
+            Assert
+                .Equal(productId1, result.Items[productIndex1].Id);
+
+            Assert
+                .Equal(productId2, result.Items[productIndex2].Id);
+
+            Assert
+                .Equal(page, result.Page);
+
+            Assert
+                .Equal(pageSize, result.PageSize);
+        }
+
+        [Fact]
+        public async Task GetPaginatedGames_EmptyProducts_ReturnsEmptyList()
+        {
+            int page = 1;
+            int pageSize = 2;
+
+            var products = new List<Product>()
+                .AsQueryable();
+
+            _productRepositoryMock
+                .Setup(r => r.GetFilteredProducts(It.IsAny<List<string>>(), It.IsAny<Rating>()))
+                    .Returns(products);
+
+            _productRepositoryMock
+                .Setup(r => r.GetSortedProducts(It.IsAny<IQueryable<Product>>(),
+                    It.IsAny<SortByField>(), It.IsAny<SortOrder>()))
+                    .Returns(products);
+
+            _productRepositoryMock
+                .Setup(r => r.GetPaginationProductItems(It.IsAny<IQueryable<Product>>(), 
+                    It.IsAny<int>(), It.IsAny<int>()))
+                    .Returns(Task.FromResult(new List<Product>()));
+
+            var filterModel = new GameFilterAndSortModel
+            {
+                Genres = new List<string>(),
+                Age = Rating.All,
+                SortBy = SortByField.Price,
+                SortOrder = SortOrder.Asc
+            };
+
+            var paginationModel = new PaginationRequestModel
+            {
+                Page = page,
+                PageSize = pageSize
+            };
+
+            PaginatedResponseModel<Product> result = await _gamesService
+                .GetPaginatedGames(filterModel, paginationModel);
+
+            Assert
+                .Empty(result.Items);
+
+            Assert
+                .Equal(page, result.Page);
+
+            Assert
+                .Equal(pageSize, result.PageSize);
         }
     }
 }

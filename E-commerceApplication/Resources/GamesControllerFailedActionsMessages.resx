@@ -117,52 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BackgroundRequired" xml:space="preserve">
-    <value>Background is required</value>
+  <data name="DeleteGameBadRequestMessage" xml:space="preserve">
+    <value>Bad Game removement request</value>
   </data>
-  <data name="CountRequired" xml:space="preserve">
-    <value>Count is required</value>
+  <data name="DeleteRatingsBadRequestMessage" xml:space="preserve">
+    <value>Bad Ratings removement request</value>
   </data>
-  <data name="GenreRequired" xml:space="preserve">
-    <value>Genre is required</value>
+  <data name="EditRatingBadRequestMessage" xml:space="preserve">
+    <value>Bad Rating editing request</value>
   </data>
-  <data name="LogoRequired" xml:space="preserve">
-    <value>Logo is required</value>
+  <data name="NotFoundGameRequestMessage" xml:space="preserve">
+    <value>Not Found Game request</value>
   </data>
-  <data name="NameRequired" xml:space="preserve">
-    <value>Name is required</value>
+  <data name="UpdateGameBadRequestMessage" xml:space="preserve">
+    <value>Bad Game update request</value>
   </data>
-  <data name="PlatformRequired" xml:space="preserve">
-    <value>Platform is required</value>
-  </data>
-  <data name="PriceRequired" xml:space="preserve">
-    <value>Price is required</value>
-  </data>
-  <data name="RatingRequired" xml:space="preserve">
-    <value>Rating is required</value>
-  </data>
-  <data name="ProductIdRequired" xml:space="preserve">
-    <value>Product ID is required</value>
-  </data>
-  <data name="ListProductRequired" xml:space="preserve">
-    <value>Products are required</value>
-  </data>
-  <data name="InvalidAgeFilter" xml:space="preserve">
-    <value>Invalid age rating filter</value>
-  </data>
-  <data name="InvalidSort" xml:space="preserve">
-    <value>Invalid sort field</value>
-  </data>
-  <data name="InvalidSortOrder" xml:space="preserve">
-    <value>Invalid sort order</value>
-  </data>
-  <data name="InvalidSortOrderAndBy" xml:space="preserve">
-    <value>Both sort by and sort order must be provided together</value>
-  </data>
-  <data name="InvalidGenres" xml:space="preserve">
-    <value>Invalid genre fields</value>
-  </data>
-  <data name="InvalidRating" xml:space="preserve">
-    <value>The rating is from 1 to 5</value>
+  <data name="UserNotAuthorized" xml:space="preserve">
+    <value>User was not authorized</value>
   </data>
 </root>

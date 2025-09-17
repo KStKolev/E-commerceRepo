@@ -38,7 +38,13 @@ cloudinary.Api.Secure = true;
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddRazorPages();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opts => 
+    {
+        opts.JsonSerializerOptions
+            .Converters
+            .Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 builder.Services.AddSwaggerGen(c =>
 {
     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";

@@ -4,8 +4,10 @@ using E_commerceApplication.Business.Models;
 using E_commerceApplication.DAL.Entities;
 using E_commerceApplication.DTOs;
 using E_commerceApplication.Resources;
+using E_commerceApplication.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace E_commerceApplication.Controllers
 {
@@ -18,12 +20,14 @@ namespace E_commerceApplication.Controllers
     {
         private readonly IGamesService _gamesService;
         private readonly IImageService _imageService;
+        private readonly IRatingService _ratingService;
 
         public GamesController(IGamesService gamesService, 
-            IImageService imageService)
+            IImageService imageService, IRatingService ratingService)
         {
             _gamesService = gamesService;
             _imageService = imageService;
+            _ratingService = ratingService;
         }
 
         /// <summary>
@@ -86,7 +90,7 @@ namespace E_commerceApplication.Controllers
 
             if (product == null)
             {
-                return NotFound(string.Format(ControllerExceptionMessages.ProductNotFound, id));
+                return NotFound(string.Format(GamesControllerFailedActionsMessages.NotFoundGameRequestMessage));
             }
 
             return Ok(product);
@@ -105,11 +109,11 @@ namespace E_commerceApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGame([FromForm] GamesDto gameDto)
         {
-            var logoUrl = gameDto.Logo != null ?
+            string logoUrl = gameDto.Logo != null ?
                 await _imageService.UploadImageAsync(gameDto.Logo)
                 : string.Empty;
 
-            var backgroundUrl = gameDto.Background != null ?
+            string backgroundUrl = gameDto.Background != null ?
                 await _imageService.UploadImageAsync(gameDto.Background)
                 : string.Empty;
 
@@ -144,11 +148,11 @@ namespace E_commerceApplication.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateGame([FromForm] UpdateGamesDto updateGameModelDto)
         {
-            var logoUrl = updateGameModelDto.Logo != null ? 
+            string logoUrl = updateGameModelDto.Logo != null ? 
                 await _imageService.UploadImageAsync(updateGameModelDto.Logo) 
                 : string.Empty;
 
-            var backgroundUrl = updateGameModelDto.Background != null ? 
+            string backgroundUrl = updateGameModelDto.Background != null ? 
                 await _imageService.UploadImageAsync(updateGameModelDto.Background) 
                 : string.Empty;
 
@@ -165,17 +169,15 @@ namespace E_commerceApplication.Controllers
                 Price = updateGameModelDto.Price
             };
 
-            try
-            {
-                await _gamesService
-                    .UpdateGameAsync(updateGameModel);
+            bool isGameUpdated = await _gamesService
+                .UpdateGameAsync(updateGameModel);
 
-                return Ok(updateGameModel);
-            }
-            catch (ArgumentException exception)
+            if (!isGameUpdated) 
             {
-                return NotFound(exception.Message);
+                return BadRequest(GamesControllerFailedActionsMessages.UpdateGameBadRequestMessage);
             }
+
+            return Ok(updateGameModel);
         }
 
         /// <summary>
@@ -191,17 +193,129 @@ namespace E_commerceApplication.Controllers
         [HttpDelete("id/{id}")]
         public async Task<IActionResult> DeleteGame(int id)
         {
-            try
-            {
-                await _gamesService
-                    .DeleteGameAsync(id);
+            bool isDeleted = await _gamesService
+                .DeleteGameAsync(id);
 
-                return NoContent();
-            }
-            catch (ArgumentException)
+            if (!isDeleted) 
             {
-                return NotFound(string.Format(ControllerExceptionMessages.ProductNotFound, id));
+                return BadRequest(string.Format(GamesControllerFailedActionsMessages.DeleteGameBadRequestMessage));
             }
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Edits the rating of a game by a user.
+        /// </summary>
+        /// <param name="editRatingRequestDto">
+        /// The details of the rating to edit, including the product ID and the new rating value. 
+        /// </param>
+        /// <returns>
+        /// An Ok result with the edited rating details if the edit is successful, or a BadRequest result if the edit fails. 
+        /// </returns>
+        [Authorize]
+        [HttpPost("rating")]
+        public async Task<IActionResult> EditRating([FromBody] EditRatingRequestDto editRatingRequestDto) 
+        {
+            string? userId = User
+                .FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!Guid.TryParse(userId, out Guid result))
+            {
+                return Unauthorized(GamesControllerFailedActionsMessages.UserNotAuthorized);
+            }
+
+            EditRatingModel editRatingModel = new EditRatingModel
+            {
+                ProductId = editRatingRequestDto.ProductId,
+                UserId = result,
+                Rating = editRatingRequestDto.Rating
+            };
+
+            bool isEdited = await _ratingService
+                .EditRatingGameAsync(editRatingModel);
+
+            if (!isEdited) 
+            {
+                return BadRequest(GamesControllerFailedActionsMessages.EditRatingBadRequestMessage);
+            }
+
+            return Ok(editRatingModel);
+        }
+
+        /// <summary>
+        /// Deletes ratings for multiple products by a user.
+        /// </summary>
+        /// <param name="deleteRatingRequestDto">
+        /// The details of the ratings to delete, including a list of product IDs. 
+        /// </param>
+        /// <returns>
+        /// A NoContent result if the deletion is successful, or a BadRequest result if the deletion fails. 
+        /// </returns>
+        [Authorize]
+        [HttpDelete("rating")]
+        public async Task<IActionResult> DeleteRating([FromBody] DeleteRatingRequestDto deleteRatingRequestDto)
+        {
+            string? userId = User
+                .FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+
+            if (!Guid.TryParse(userId, out Guid result))
+            {
+                return Unauthorized(GamesControllerFailedActionsMessages.UserNotAuthorized);
+            }
+
+            DeleteRatingModel deleteRatingModel = new DeleteRatingModel
+            {
+                UserId = result,
+                ProductIds = deleteRatingRequestDto.ProductIds
+            };
+
+            await _ratingService
+                .DeleteRatingsAsync(deleteRatingModel);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Fetches a paginated list of games based on the provided filtering, sorting, and pagination parameters.
+        /// </summary>
+        /// <param name="gameFilterAndSortRequestDto">
+        /// The filtering and sorting parameters for the game list. 
+        /// </param>
+        /// <param name="paginationRequestDto">
+        /// The pagination parameters for the game list. 
+        /// </param>
+        /// <returns>
+        /// A paginated list of games matching the provided filtering, sorting, and pagination parameters. 
+        /// </returns>
+        [AllowAnonymous]
+        [HttpGet("list")]
+        [ValidateGameListParams]
+        public async Task<IActionResult> GetGameList([FromQuery] GameFilterAndSortRequestDto gameFilterAndSortRequestDto,
+            [FromQuery] PaginationRequestDto paginationRequestDto) 
+        {
+            GameFilterAndSortModel gameFilterAndSortModel = new GameFilterAndSortModel
+            {
+                Genres = gameFilterAndSortRequestDto.Genres,
+                Age = gameFilterAndSortRequestDto.Age,
+                SortBy = gameFilterAndSortRequestDto
+                    .SortBy
+                    .GetValueOrDefault(),
+                SortOrder = gameFilterAndSortRequestDto
+                    .SortOrder
+                    .GetValueOrDefault()
+            };
+
+            PaginationRequestModel paginationRequestModel = new PaginationRequestModel
+            {
+                Page = paginationRequestDto.Page,
+                PageSize = paginationRequestDto.PageSize
+            };
+
+            PaginatedResponseModel<Product> paginatedGames = await _gamesService
+                .GetPaginatedGames(gameFilterAndSortModel, paginationRequestModel);
+
+            return Ok(paginatedGames);
         }
     }
 }

@@ -4,6 +4,7 @@ using E_commerceApplication.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerceApplication.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250911160316_SetSoftProductRatingRemovement")]
+    partial class SetSoftProductRatingRemovement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,8 +165,8 @@ namespace E_commerceApplication.DAL.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<double>("TotalRating")
-                        .HasColumnType("float");
+                    b.Property<int>("TotalRating")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -188,14 +191,14 @@ namespace E_commerceApplication.DAL.Migrations
                             Background = "",
                             Count = 0,
                             DateCreated = new DateTime(2021, 12, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Genre = "Shooter",
+                            Genre = "",
                             IsDeleted = false,
                             Logo = "",
                             Name = "Halo Infinite",
                             Platform = 2,
                             Price = 59.99m,
                             Rating = 0,
-                            TotalRating = 0.0
+                            TotalRating = 20
                         },
                         new
                         {
@@ -203,14 +206,14 @@ namespace E_commerceApplication.DAL.Migrations
                             Background = "",
                             Count = 0,
                             DateCreated = new DateTime(2018, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Genre = "Action",
+                            Genre = "",
                             IsDeleted = false,
                             Logo = "",
                             Name = "God of War",
                             Platform = 1,
                             Price = 39.99m,
                             Rating = 0,
-                            TotalRating = 0.0
+                            TotalRating = 44
                         },
                         new
                         {
@@ -218,14 +221,14 @@ namespace E_commerceApplication.DAL.Migrations
                             Background = "",
                             Count = 0,
                             DateCreated = new DateTime(2020, 3, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Genre = "Shooter",
+                            Genre = "",
                             IsDeleted = false,
                             Logo = "",
                             Name = "Half-Life: Alyx",
                             Platform = 2,
                             Price = 49.99m,
                             Rating = 0,
-                            TotalRating = 0.0
+                            TotalRating = 59
                         },
                         new
                         {
@@ -233,14 +236,14 @@ namespace E_commerceApplication.DAL.Migrations
                             Background = "",
                             Count = 0,
                             DateCreated = new DateTime(2017, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Genre = "Adventure",
+                            Genre = "",
                             IsDeleted = false,
                             Logo = "",
                             Name = "The Legend of Zelda: Breath of the Wild",
                             Platform = 0,
                             Price = 59.99m,
                             Rating = 0,
-                            TotalRating = 0.0
+                            TotalRating = 72
                         },
                         new
                         {
@@ -248,14 +251,14 @@ namespace E_commerceApplication.DAL.Migrations
                             Background = "",
                             Count = 0,
                             DateCreated = new DateTime(2022, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Genre = "RPG",
+                            Genre = "",
                             IsDeleted = false,
                             Logo = "",
                             Name = "Elden Ring",
                             Platform = 3,
                             Price = 69.99m,
                             Rating = 0,
-                            TotalRating = 0.0
+                            TotalRating = 86
                         });
                 });
 
@@ -266,6 +269,9 @@ namespace E_commerceApplication.DAL.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
