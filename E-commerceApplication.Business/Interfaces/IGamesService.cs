@@ -13,9 +13,9 @@ namespace E_commerceApplication.Business.Interfaces
 
         Task<int> CreateGameAsync(GamesModel gameModel);
 
-        Task UpdateGameAsync(UpdateGamesModel gameModel);
+        Task<bool> UpdateGameAsync(UpdateGamesModel gameModel);
 
-        Task DeleteGameAsync(int gameId);
+        Task<bool> DeleteGameAsync(int gameId);
 
         Task<PaginatedResponseModel<Product>> GetPaginatedGames(GameFilterAndSortModel gameListModel, 
             PaginationRequestModel paginationRequestModel);

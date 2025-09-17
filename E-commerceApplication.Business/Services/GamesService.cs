@@ -1,6 +1,5 @@
 ﻿using E_commerceApplication.Business.Interfaces;
 using E_commerceApplication.Business.Models;
-using E_commerceApplication.Business.Resources;
 using E_commerceApplication.DAL.Entities;
 using E_commerceApplication.DAL.Interfaces;
 
@@ -36,18 +35,20 @@ namespace E_commerceApplication.Business.Services
             return game.Id;
         }
 
-        public async Task DeleteGameAsync(int gameId)
+        public async Task<bool> DeleteGameAsync(int gameId)
         {
             Product? product = await _productRepository
                 .GetProductByIdAsync(gameId);
 
             if (product == null)
             {
-                throw new ArgumentException(ExceptionMessages.ProductNotFound);
+                return false;
             }
 
             await _productRepository
                 .DeleteProductAsync(product);
+
+            return true;
         }
 
         public async Task<Product?> GetGameByIdAsync(int gameId)
@@ -68,14 +69,14 @@ namespace E_commerceApplication.Business.Services
                 .GetTopProductPlatformsAsync();
         }
 
-        public async Task UpdateGameAsync(UpdateGamesModel gameModel)
+        public async Task<bool> UpdateGameAsync(UpdateGamesModel gameModel)
         {
             Product? product = await _productRepository
                 .GetProductByIdAsync(gameModel.Id);
 
             if (product == null)
             {
-                throw new ArgumentException(ExceptionMessages.ProductNotFound);
+                return false;
             }
 
             product.Name = gameModel.Name;
@@ -89,6 +90,8 @@ namespace E_commerceApplication.Business.Services
 
             await _productRepository
                 .UpdateProductAsync(product);
+
+            return true;
         }
 
         public async Task<PaginatedResponseModel<Product>> GetPaginatedGames(GameFilterAndSortModel gameListModel,
