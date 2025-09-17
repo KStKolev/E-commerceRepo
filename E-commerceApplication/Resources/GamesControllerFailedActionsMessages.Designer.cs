@@ -70,15 +70,6 @@ namespace E_commerceApplication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bad Ratings removement request.
-        /// </summary>
-        public static string DeleteRatingsBadRequestMessage {
-            get {
-                return ResourceManager.GetString("DeleteRatingsBadRequestMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Bad Rating editing request.
         /// </summary>
         public static string EditRatingBadRequestMessage {

@@ -14,8 +14,11 @@ namespace E_commerceApplication.Tests.DTOTests
                 AddressDelivery = "Sofia, 1000"
             };
 
-            var results = ValidationHelper.ValidateModel(dto);
-            Assert.Empty(results);
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
+            Assert
+                .Empty(results);
         }
 
         [Fact]
@@ -28,7 +31,9 @@ namespace E_commerceApplication.Tests.DTOTests
                 AddressDelivery = "Sofia, 1000"
             };
 
-            var results = ValidationHelper.ValidateModel(dto);
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(UserProfileDto.UserName)));
         }
 
@@ -41,7 +46,10 @@ namespace E_commerceApplication.Tests.DTOTests
                 PhoneNumber = "",
                 AddressDelivery = "Sofia, 1000"
             };
-            var results = ValidationHelper.ValidateModel(dto);
+
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(UserProfileDto.PhoneNumber)));
         }
 
@@ -55,7 +63,9 @@ namespace E_commerceApplication.Tests.DTOTests
                 AddressDelivery = "Sofia, 1000"
             };
 
-            var results = ValidationHelper.ValidateModel(dto);
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(UserProfileDto.PhoneNumber)));
         }
 
@@ -68,7 +78,10 @@ namespace E_commerceApplication.Tests.DTOTests
                 PhoneNumber = "+359123123456",
                 AddressDelivery = ""
             };
-            var results = ValidationHelper.ValidateModel(dto);
+
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(UserProfileDto.AddressDelivery)));
         }
     }

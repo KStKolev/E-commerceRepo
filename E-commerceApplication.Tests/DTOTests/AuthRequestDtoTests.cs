@@ -13,8 +13,11 @@ namespace E_commerceApplication.Tests.DTOTests
                 Password = "Pass123@321!"
             };
 
-            var results = ValidationHelper.ValidateModel(dto);
-            Assert.Empty(results);
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
+            Assert
+                .Empty(results);
         }
 
         [Fact]
@@ -26,7 +29,9 @@ namespace E_commerceApplication.Tests.DTOTests
                 Password = "Pass123@321!"
             };
 
-            var results = ValidationHelper.ValidateModel(dto);
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(dto.Email)));
         }
 
@@ -39,7 +44,9 @@ namespace E_commerceApplication.Tests.DTOTests
                 Password = ""
             };
 
-            var results = ValidationHelper.ValidateModel(dto);
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(dto.Password)));
         }
 
@@ -52,7 +59,9 @@ namespace E_commerceApplication.Tests.DTOTests
                 Password = "Hello123!"
             };
 
-            var results = ValidationHelper.ValidateModel(dto);
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(dto.Email)));
         }
 
@@ -65,7 +74,9 @@ namespace E_commerceApplication.Tests.DTOTests
                 Password = "A23d!e"
             };
 
-            var results = ValidationHelper.ValidateModel(dto);
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(dto.Password)));
         }
     }

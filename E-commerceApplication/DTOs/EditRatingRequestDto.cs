@@ -11,7 +11,6 @@ namespace E_commerceApplication.DTOs
 
         [Required(ErrorMessageResourceType = typeof(GamesDtoValidationMessages),
             ErrorMessageResourceName = nameof(GamesDtoValidationMessages.RatingRequired))]
-
         [Range(1,5, ErrorMessageResourceType = typeof(GamesDtoValidationMessages),
             ErrorMessageResourceName = nameof(GamesDtoValidationMessages.InvalidRating))]
         public int Rating { get; set; }

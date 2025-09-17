@@ -42,11 +42,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>AuthDtoValidationMessages.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\ControllerExceptionMessages.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ControllerExceptionMessages.resx</DependentUpon>
-    </Compile>
     <Compile Update="Resources\GamesControllerFailedActionsMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

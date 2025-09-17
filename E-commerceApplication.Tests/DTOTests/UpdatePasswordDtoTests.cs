@@ -16,8 +16,11 @@ namespace E_commerceApplication.Tests.DTOTests
                 NewPassword = newPassword,
             };
 
-            Assert.Equal(currentPassword, dto.CurrentPassword);
-            Assert.Equal(newPassword, dto.NewPassword);
+            Assert
+                .Equal(currentPassword, dto.CurrentPassword);
+
+            Assert
+                .Equal(newPassword, dto.NewPassword);
         }
 
         [Fact]
@@ -29,7 +32,9 @@ namespace E_commerceApplication.Tests.DTOTests
                 NewPassword = "NewPass456!"
             };
 
-            var results = ValidationHelper.ValidateModel(dto);
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(UpdatePasswordDto.CurrentPassword)));
         }
 
@@ -41,7 +46,10 @@ namespace E_commerceApplication.Tests.DTOTests
                 CurrentPassword = "OldPass123!",
                 NewPassword = ""
             };
-            var results = ValidationHelper.ValidateModel(dto);
+
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(UpdatePasswordDto.NewPassword)));
         }
 
@@ -53,7 +61,10 @@ namespace E_commerceApplication.Tests.DTOTests
                 CurrentPassword = "OldPass123!",
                 NewPassword = "short"
             };
-            var results = ValidationHelper.ValidateModel(dto);
+
+            var results = ValidationHelper
+                .ValidateModel(dto);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(UpdatePasswordDto.NewPassword)));
         }
     }

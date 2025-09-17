@@ -2,6 +2,7 @@
 using E_commerceApplication.Business.Models;
 using E_commerceApplication.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -33,10 +34,10 @@ namespace E_commerceApplication.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProfile() 
         {
-            var userId = User
+            string? userId = User
                 .FindFirst(ClaimTypes.NameIdentifier)?.Value!;
 
-            var profile = await _userService
+            UserProfileModel? profile = await _userService
                 .GetProfileAsync(userId);
 
             if (profile == null) 
@@ -61,7 +62,7 @@ namespace E_commerceApplication.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateProfile(UserProfileDto userProfileDto)
         {
-            var userId = User
+            string? userId = User
                 .FindFirst(ClaimTypes.NameIdentifier)?.Value!;
 
             UserProfileModel userProfileModel = new()
@@ -71,7 +72,7 @@ namespace E_commerceApplication.Controllers
                 AddressDelivery = userProfileDto.AddressDelivery
             };  
 
-            var result = await _userService
+            IdentityResult result = await _userService
                 .UpdateUserProfileAsync(userId, userProfileModel);
 
             if (!result.Succeeded)
@@ -96,7 +97,7 @@ namespace E_commerceApplication.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDto updatePasswordDto) 
         {
-            var userId = User
+            string? userId = User
                 .FindFirst(ClaimTypes.NameIdentifier)?.Value!;
 
             UpdatePasswordModel updatePasswordModel = new()
@@ -105,7 +106,7 @@ namespace E_commerceApplication.Controllers
                 NewPassword = updatePasswordDto.NewPassword
             };
 
-            var result = await _userService
+            IdentityResult result = await _userService
                 .UpdatePasswordAsync(userId, updatePasswordModel);
 
             if (!result.Succeeded)

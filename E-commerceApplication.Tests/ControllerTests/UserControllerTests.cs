@@ -42,26 +42,41 @@ namespace E_commerceApplication.Tests.ControllerTests
                 AddressDelivery = "123 Test St"
             };
 
-            _userServiceMock.Setup(s => s.GetProfileAsync(UserId))
+            _userServiceMock
+                .Setup(s => s.GetProfileAsync(UserId))
                 .ReturnsAsync(userProfile);
 
-            var result = await _controller.GetProfile();
+            var result = await _controller
+                .GetProfile();
 
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnValue = Assert.IsType<UserProfileModel>(okResult.Value);
-            Assert.Equal(userProfile.UserName, returnValue.UserName);
-            Assert.Equal(userProfile.PhoneNumber, returnValue.PhoneNumber);
-            Assert.Equal(userProfile.AddressDelivery, returnValue.AddressDelivery);
+            var okResult = Assert
+                .IsType<OkObjectResult>(result);
+
+            var returnValue = Assert
+                .IsType<UserProfileModel>(okResult.Value);
+
+            Assert
+                .Equal(userProfile.UserName, returnValue.UserName);
+
+            Assert
+                .Equal(userProfile.PhoneNumber, returnValue.PhoneNumber);
+
+            Assert
+                .Equal(userProfile.AddressDelivery, returnValue.AddressDelivery);
         }
 
         [Fact]
         public async Task GetProfile_ReturnsNotFound_WhenProfileDoesNotExist()
         {
-            _userServiceMock.Setup(s => s.GetProfileAsync(UserId))
-                .ReturnsAsync((UserProfileModel?)null);
+            _userServiceMock
+                .Setup(s => s.GetProfileAsync(UserId))
+                    .ReturnsAsync((UserProfileModel?)null);
 
-            var result = await _controller.GetProfile();
-            Assert.IsType<NotFoundResult>(result);
+            var result = await _controller
+                .GetProfile();
+
+            Assert
+                .IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -81,15 +96,27 @@ namespace E_commerceApplication.Tests.ControllerTests
                 AddressDelivery = userProfileDto.AddressDelivery
             };
 
-            _userServiceMock.Setup(s => s.UpdateUserProfileAsync(UserId, It.IsAny<UserProfileModel>()))
-                .ReturnsAsync(IdentityResult.Success);
+            _userServiceMock
+                .Setup(s => s.UpdateUserProfileAsync(UserId, It.IsAny<UserProfileModel>()))
+                    .ReturnsAsync(IdentityResult.Success);
 
-            var result = await _controller.UpdateProfile(userProfileDto);
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnValue = Assert.IsType<UserProfileModel>(okResult.Value);
-            Assert.Equal(userProfileModel.UserName, returnValue.UserName);
-            Assert.Equal(userProfileModel.PhoneNumber, returnValue.PhoneNumber);
-            Assert.Equal(userProfileModel.AddressDelivery, returnValue.AddressDelivery);
+            var result = await _controller
+                .UpdateProfile(userProfileDto);
+
+            var okResult = Assert
+                .IsType<OkObjectResult>(result);
+
+            var returnValue = Assert
+                .IsType<UserProfileModel>(okResult.Value);
+
+            Assert
+                .Equal(userProfileModel.UserName, returnValue.UserName);
+
+            Assert
+                .Equal(userProfileModel.PhoneNumber, returnValue.PhoneNumber);
+
+            Assert
+                .Equal(userProfileModel.AddressDelivery, returnValue.AddressDelivery);
         }
 
         [Fact]
@@ -104,14 +131,21 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             string description = "Update failed";
 
-            _userServiceMock.Setup(s => s.UpdateUserProfileAsync(UserId, It.IsAny<UserProfileModel>()))
-                .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = description }));
+            _userServiceMock
+                .Setup(s => s.UpdateUserProfileAsync(UserId, It.IsAny<UserProfileModel>()))
+                    .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = description }));
 
-            var result = await _controller.UpdateProfile(dto);
+            var result = await _controller
+                .UpdateProfile(dto);
 
-            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            var errors = Assert.IsAssignableFrom<IEnumerable<IdentityError>>(badRequest.Value);
-            Assert.Contains(errors, e => e.Description == description);
+            var badRequest = Assert
+                .IsType<BadRequestObjectResult>(result);
+
+            var errors = Assert
+                .IsAssignableFrom<IEnumerable<IdentityError>>(badRequest.Value);
+
+            Assert
+                .Contains(errors, e => e.Description == description);
         }
 
         [Fact]
@@ -123,11 +157,15 @@ namespace E_commerceApplication.Tests.ControllerTests
                 NewPassword = "new123"
             };
 
-            _userServiceMock.Setup(s => s.UpdatePasswordAsync(UserId, It.IsAny<UpdatePasswordModel>()))
-                .ReturnsAsync(IdentityResult.Success);
+            _userServiceMock
+                .Setup(s => s.UpdatePasswordAsync(UserId, It.IsAny<UpdatePasswordModel>()))
+                    .ReturnsAsync(IdentityResult.Success);
 
-            var result = await _controller.UpdatePassword(dto);
-            Assert.IsType<NoContentResult>(result);
+            var result = await _controller
+                .UpdatePassword(dto);
+
+            Assert
+                .IsType<NoContentResult>(result);
         }
 
         [Fact]
@@ -141,13 +179,21 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             string description = "Password update failed";
 
-            _userServiceMock.Setup(s => s.UpdatePasswordAsync(UserId, It.IsAny<UpdatePasswordModel>()))
-                .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = description }));
+            _userServiceMock
+                .Setup(s => s.UpdatePasswordAsync(UserId, It.IsAny<UpdatePasswordModel>()))
+                    .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = description }));
 
-            var result = await _controller.UpdatePassword(dto);
-            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-            var errors = Assert.IsAssignableFrom<IEnumerable<IdentityError>>(badRequest.Value);
-            Assert.Contains(errors, e => e.Description == description);
+            var result = await _controller
+                .UpdatePassword(dto);
+
+            var badRequest = Assert
+                .IsType<BadRequestObjectResult>(result);
+
+            var errors = Assert
+                .IsAssignableFrom<IEnumerable<IdentityError>>(badRequest.Value);
+
+            Assert
+                .Contains(errors, e => e.Description == description);
         }
     }
 }

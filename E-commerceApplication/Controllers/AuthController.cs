@@ -42,7 +42,8 @@ namespace E_commerceApplication.Controllers
                 Password = requestDto.Password
             };
 
-            var result = await _authService.SignUpAsync(signUpRequestModel);
+            var result = await _authService
+                .SignUpAsync(signUpRequestModel);
 
             if (!result.Succeeded)
             {

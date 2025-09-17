@@ -29,16 +29,24 @@ namespace E_commerceApplication.Tests.ServiceTests
                 AddressDelivery = "Somewhere"
             };
 
-            _userManagerMock.Setup(u => u.FindByIdAsync(user.Id.ToString()))
-                            .ReturnsAsync(user);
+            _userManagerMock
+                .Setup(u => u.FindByIdAsync(user.Id.ToString()))
+                    .ReturnsAsync(user);
 
             var result = await _userService
                 .GetProfileAsync(user.Id.ToString());
 
-            Assert.NotNull(result);
-            Assert.Equal(user.UserName, result!.UserName);
-            Assert.Equal(user.PhoneNumber, result.PhoneNumber);
-            Assert.Equal(user.AddressDelivery, result.AddressDelivery);
+            Assert
+                .NotNull(result);
+
+            Assert
+                .Equal(user.UserName, result!.UserName);
+
+            Assert
+                .Equal(user.PhoneNumber, result.PhoneNumber);
+
+            Assert
+                .Equal(user.AddressDelivery, result.AddressDelivery);
         }
 
         [Fact]
@@ -46,13 +54,15 @@ namespace E_commerceApplication.Tests.ServiceTests
         {
             Guid userId = Guid.NewGuid();
 
-            _userManagerMock.Setup(u => u.FindByIdAsync(userId.ToString()))
-                .ReturnsAsync((ApplicationUser?)null);
+            _userManagerMock
+                .Setup(u => u.FindByIdAsync(userId.ToString()))
+                    .ReturnsAsync((ApplicationUser?)null);
 
             var result = await _userService
                 .GetProfileAsync(userId.ToString());
 
-            Assert.Null(result);
+            Assert
+                .Null(result);
         }
 
         [Fact]
@@ -65,23 +75,33 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             var updateModel = new UserProfileModel
             {
-                UserName = "newName",
-                PhoneNumber = "+123987654231",
-                AddressDelivery = "New Address"
+                UserName = username,
+                PhoneNumber = phoneNumber,
+                AddressDelivery = addressDelivery
             };
 
-            _userManagerMock.Setup(m => m.FindByIdAsync(user.Id.ToString()))
-                .ReturnsAsync(user);
+            _userManagerMock
+                .Setup(m => m.FindByIdAsync(user.Id.ToString()))
+                    .ReturnsAsync(user);
 
-            _userManagerMock.Setup(m => m.UpdateAsync(user))
-                .ReturnsAsync(IdentityResult.Success);
+            _userManagerMock
+                .Setup(m => m.UpdateAsync(user))
+                    .ReturnsAsync(IdentityResult.Success);
 
-            var result = await _userService.UpdateUserProfileAsync(user.Id.ToString(), updateModel);
+            var result = await _userService
+                .UpdateUserProfileAsync(user.Id.ToString(), updateModel);
 
-            Assert.True(result.Succeeded);
-            Assert.Equal(username, user.UserName);
-            Assert.Equal(phoneNumber, user.PhoneNumber);
-            Assert.Equal(addressDelivery, user.AddressDelivery);
+            Assert
+                .True(result.Succeeded);
+
+            Assert
+                .Equal(username, user.UserName);
+
+            Assert
+                .Equal(phoneNumber, user.PhoneNumber);
+
+            Assert
+                .Equal(addressDelivery, user.AddressDelivery);
         }
 
         [Fact]
@@ -99,17 +119,21 @@ namespace E_commerceApplication.Tests.ServiceTests
                 AddressDelivery = addressDelivery
             };
 
-            _userManagerMock.Setup(m => m.FindByIdAsync(userId.ToString()))
-                .ReturnsAsync((ApplicationUser?)null);
+            _userManagerMock
+                .Setup(m => m.FindByIdAsync(userId.ToString()))
+                    .ReturnsAsync((ApplicationUser?)null);
 
             await Assert.ThrowsAsync<KeyNotFoundException>(() =>
-                _userService.UpdateUserProfileAsync(userId.ToString(), updateModel));
+                _userService
+                    .UpdateUserProfileAsync(userId.ToString(), updateModel));
         }
 
         [Fact]
         public async Task UpdatePasswordAsync_UserExists_ChangesPassword()
         {
-            var user = new ApplicationUser { Id = Guid.NewGuid(), UserName = "testUser" };
+            string username = "testUser";
+            var user = new ApplicationUser { Id = Guid.NewGuid(), UserName = username };
+
             string currentPassword = "oldPass";
             string newPassword = "newPass";
 
@@ -119,15 +143,19 @@ namespace E_commerceApplication.Tests.ServiceTests
                 NewPassword = newPassword
             };
 
-            _userManagerMock.Setup(m => m.FindByIdAsync(user.Id.ToString()))
-                .ReturnsAsync(user);
+            _userManagerMock
+                .Setup(m => m.FindByIdAsync(user.Id.ToString()))
+                    .ReturnsAsync(user);
 
-            _userManagerMock.Setup(m => m.ChangePasswordAsync(user, currentPassword, newPassword))
-                .ReturnsAsync(IdentityResult.Success);
+            _userManagerMock
+                .Setup(m => m.ChangePasswordAsync(user, currentPassword, newPassword))
+                    .ReturnsAsync(IdentityResult.Success);
 
-            var result = await _userService.UpdatePasswordAsync(user.Id.ToString(), passwordModel);
+            var result = await _userService
+                .UpdatePasswordAsync(user.Id.ToString(), passwordModel);
 
-            Assert.True(result.Succeeded);
+            Assert
+                .True(result.Succeeded);
         }
         
         [Fact]
@@ -143,11 +171,13 @@ namespace E_commerceApplication.Tests.ServiceTests
                 NewPassword = newPassword
             };
 
-            _userManagerMock.Setup(m => m.FindByIdAsync(userId.ToString()))
-                .ReturnsAsync((ApplicationUser?)null);
+            _userManagerMock
+                .Setup(m => m.FindByIdAsync(userId.ToString()))
+                    .ReturnsAsync((ApplicationUser?)null);
 
             await Assert.ThrowsAsync<KeyNotFoundException>(() =>
-                _userService.UpdatePasswordAsync(userId.ToString(), passwordModel));
+                _userService
+                    .UpdatePasswordAsync(userId.ToString(), passwordModel));
         }
     }
 }
