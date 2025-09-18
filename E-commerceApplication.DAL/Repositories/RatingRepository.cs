@@ -58,12 +58,5 @@ namespace E_commerceApplication.DAL.Repositories
             await _context
                 .SaveChangesAsync();
         }
-
-        public async Task<bool> CheckProductWithIdAsync(int productId)
-        {
-            return await _context
-                .Products
-                .AnyAsync(p => p.Id == productId);
-        }
     }
 }

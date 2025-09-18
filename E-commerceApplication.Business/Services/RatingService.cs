@@ -7,15 +7,17 @@ namespace E_commerceApplication.Business.Services
     public class RatingService : IRatingService
     {
         private readonly IRatingRepository _ratingRepository;
+        private readonly IRatingValidationRepository _ratingValidationRepository;
 
-        public RatingService(IRatingRepository ratingRepository)
+        public RatingService(IRatingRepository ratingRepository, IRatingValidationRepository ratingValidationRepository)
         {
             _ratingRepository = ratingRepository;
+            _ratingValidationRepository = ratingValidationRepository;
         }
 
         public async Task<bool> EditRatingGameAsync(EditRatingModel editRatingModel)
         {
-            if (!await _ratingRepository.CheckProductWithIdAsync(editRatingModel.ProductId))
+            if (!await _ratingValidationRepository.CheckProductByIdAsync(editRatingModel.ProductId))
             {
                 return false;
             }
