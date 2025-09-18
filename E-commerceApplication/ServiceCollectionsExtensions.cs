@@ -37,6 +37,14 @@ namespace E_commerceApplication
                 .AddScoped<IRatingService, RatingService>();
             services
                 .AddScoped<IRatingRepository, RatingRepository>();
+            services
+                .AddScoped<IRatingValidationRepository, RatingValidationRepository>();
+            services
+                .AddScoped<IOrdersService, OrdersService>();
+            services
+                .AddScoped<IOrdersRepository, OrdersRepository>();
+            services
+                .AddScoped<IOrdersValidationRepository, OrdersValidationRepository>();
 
             services
                 .AddScoped<ValidateGameListParamsAttribute>();
