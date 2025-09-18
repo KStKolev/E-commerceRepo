@@ -52,16 +52,22 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>GamesDtoValidationMessages.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\OrderControllerFailedActionsMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OrderControllerFailedActionsMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\OrderDtoValidationMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OrderDtoValidationMessages.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\AuthDtoValidationMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AuthDtoValidationMessages.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\ControllerExceptionMessages.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ControllerExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\GamesControllerFailedActionsMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -70,6 +76,14 @@
     <EmbeddedResource Update="Resources\GamesDtoValidationMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GamesDtoValidationMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\OrderControllerFailedActionsMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>OrderControllerFailedActionsMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\OrderDtoValidationMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>OrderDtoValidationMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
