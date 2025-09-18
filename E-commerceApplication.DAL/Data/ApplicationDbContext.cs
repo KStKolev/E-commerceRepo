@@ -19,7 +19,7 @@ namespace E_commerceApplication.DAL.Data
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderItem> OrderItems { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -72,19 +72,19 @@ namespace E_commerceApplication.DAL.Data
                 .WithMany(u => u.Ratings);
 
             builder
-                .Entity<ApplicationUser>()
-                .HasMany(u => u.Orders)
-                .WithOne(o => o.User);
+               .Entity<ApplicationUser>()
+               .HasMany(u => u.Orders)
+               .WithOne(o => o.User);
 
             builder
-                .Entity<OrderItem>()
-                .HasOne(oi => oi.Order)
-                .WithMany(o => o.OrderItems);
+               .Entity<OrderItem>()
+               .HasOne(oi => oi.Order)
+               .WithMany(o => o.OrderItems);
 
             builder
-                .Entity<OrderItem>()
-                .HasOne(oi => oi.Product)
-                .WithMany();
+               .Entity<OrderItem>()
+               .HasOne(oi => oi.Product)
+               .WithMany();
 
             builder
                 .Entity<Product>()
