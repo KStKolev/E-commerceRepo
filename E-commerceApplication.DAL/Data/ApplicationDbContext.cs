@@ -16,7 +16,9 @@ namespace E_commerceApplication.DAL.Data
 
         public DbSet<ProductRating> ProductRatings { get; set; }
 
-        //public DbSet<Order> Orders { get; set; }
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -25,10 +27,6 @@ namespace E_commerceApplication.DAL.Data
             builder
                 .Entity<Product>()
                 .HasQueryFilter(p => !p.IsDeleted);
-
-/*            builder
-                .Entity<Order>()
-                .HasQueryFilter(o => !o.IsDeleted);*/
 
             builder
                 .Entity<Product>()
@@ -73,15 +71,20 @@ namespace E_commerceApplication.DAL.Data
                 .HasOne(pr => pr.User)
                 .WithMany(u => u.Ratings);
 
-            /*builder
+            builder
                 .Entity<ApplicationUser>()
                 .HasMany(u => u.Orders)
                 .WithOne(o => o.User);
 
             builder
-                .Entity<Order>()
-                .HasMany(o => o.Products)
-                .WithMany();*/
+                .Entity<OrderItem>()
+                .HasOne(oi => oi.Order)
+                .WithMany(o => o.OrderItems);
+
+            builder
+                .Entity<OrderItem>()
+                .HasOne(oi => oi.Product)
+                .WithMany();
 
             builder
                 .Entity<Product>()
