@@ -123,7 +123,6 @@ namespace E_commerceApplication.Tests.ServiceTests
             int orderItemId = 1;
             int newAmount = 10;
             int oldAmount = 1;
-            int firstIndex = 0;
 
             var model = new UpdateOrderModel
             {
@@ -145,14 +144,19 @@ namespace E_commerceApplication.Tests.ServiceTests
             var result = await _service
                 .UpdateOrderAsync(model);
 
-            Assert
-                .Single(result!);
+            var updatedList = Assert
+                .IsType<UpdateOrderItemListModel>(result);
+
+            var item = Assert
+                .Single(updatedList.updateOrderItemListModel);
 
             Assert
-                .Equal(newAmount, result![firstIndex].Amount);
+                .Equal(orderItemId, item.OrderItemId);
 
-            _ordersRepositoryMock
-                .Verify(r => r.SaveChangesAsync(), Times.Once);
+            Assert
+                .Equal(newAmount, item.Amount);
+
+            _ordersRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
         [Fact]

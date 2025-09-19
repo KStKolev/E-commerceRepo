@@ -142,9 +142,12 @@ namespace E_commerceApplication.Tests.ControllerTests
                 }
             };
 
-            var updatedItems = new List<OrderItem>
+            var updatedItems = new UpdateOrderItemListModel
             {
-                new() { Id = orderItemId, Amount = amount }
+                updateOrderItemListModel = new List<UpdateOrderItemModel>
+                {
+                    new() { OrderItemId = orderItemId, Amount = amount }
+                }
             };
 
             _ordersServiceMock
@@ -182,7 +185,7 @@ namespace E_commerceApplication.Tests.ControllerTests
 
             _ordersServiceMock
                 .Setup(s => s.UpdateOrderAsync(It.IsAny<UpdateOrderModel>()))
-                .ReturnsAsync((List<OrderItem>?)null);
+                .ReturnsAsync((UpdateOrderItemListModel?)null);
 
             var result = await _controller
                 .UpdateOrder(dto);
