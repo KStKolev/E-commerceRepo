@@ -62,31 +62,26 @@ namespace E_commerceApplication.Business.Services
             return loadedOrderItems;
         }
 
-        public async Task<List<OrderItem>?> UpdateOrderAsync(UpdateOrderModel updateOrderModel)
+        public async Task<UpdateOrderItemListModel?> UpdateOrderAsync(UpdateOrderModel model)
         {
             Order? pendingOrder = await _ordersRepository
-                .GetOrderByUserIdAsync(updateOrderModel.UserId);
+                .GetOrderByUserIdAsync(model.UserId);
 
-            if (pendingOrder == null) 
+            if (pendingOrder == null)
             {
                 return null;
             }
 
-            List<int> orderItemIdList = updateOrderModel
-                .Items
-                .Select(i => i.OrderItemId)
-                .ToList();
-
-            List<OrderItem> orderItemListToUpdate = await _ordersRepository
-                .GetOrderItemListByIdCollectionAsync(orderItemIdList);
-
-            Dictionary<int, int> updateLookupDictionary = updateOrderModel
-                .Items
+            Dictionary<int, int> orderItemUpdates = model.Items
                 .ToDictionary(i => i.OrderItemId, i => i.Amount);
 
-            foreach (OrderItem orderItem in orderItemListToUpdate)
+            List<OrderItem> orderItemsToUpdate = await _ordersRepository
+                .GetOrderItemListByIdCollectionAsync(orderItemUpdates.Keys
+                .ToList());
+
+            foreach (OrderItem orderItem in orderItemsToUpdate)
             {
-                if (updateLookupDictionary.TryGetValue(orderItem.Id, out int newAmount))
+                if (orderItemUpdates.TryGetValue(orderItem.Id, out int newAmount))
                 {
                     orderItem.Amount = newAmount;
                 }
@@ -95,7 +90,16 @@ namespace E_commerceApplication.Business.Services
             await _ordersRepository
                 .SaveChangesAsync();
 
-            return orderItemListToUpdate;
+            return new UpdateOrderItemListModel
+            {
+                updateOrderItemListModel = orderItemsToUpdate
+                    .Select(oi => new UpdateOrderItemModel
+                    {
+                        OrderItemId = oi.Id,
+                        Amount = oi.Amount
+                    })
+                    .ToList()
+            };
         }
 
         public async Task<bool> DeleteItemsFromOrderAsync(DeleteItemsModel deleteItemsModel)

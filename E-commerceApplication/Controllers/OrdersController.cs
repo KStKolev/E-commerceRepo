@@ -126,7 +126,7 @@ namespace E_commerceApplication.Controllers
                 .ToList()
             };
 
-            List<OrderItem>? updatedOrderItemList = await _ordersService
+            UpdateOrderItemListModel? updatedOrderItemList = await _ordersService
                 .UpdateOrderAsync(updateOrderModel);
 
             if (updatedOrderItemList == null)
@@ -134,18 +134,7 @@ namespace E_commerceApplication.Controllers
                 return BadRequest(OrderControllerFailedActionsMessages.UpdateOrderBadRequest);
             }
 
-            UpdateOrderItemListModel updateOrderItemListModel = new()
-            {
-                updateOrderItemListModel = updatedOrderItemList
-                    .Select(oi => new UpdateOrderItemModel() 
-                    {
-                        OrderItemId = oi.Id,
-                        Amount = oi.Amount      
-                    })
-                    .ToList()
-            };
-
-            return Ok(updateOrderItemListModel);
+            return Ok(updatedOrderItemList);
         }
 
         /// <summary>

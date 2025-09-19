@@ -11,7 +11,7 @@ namespace E_commerceApplication.Business.Interfaces
 
         Task<List<LoadOrderItemModel>> GetLoadItemListByOrderIdAsync(int orderId);
 
-        Task<List<OrderItem>?> UpdateOrderAsync(UpdateOrderModel updateOrderModel);
+        Task<UpdateOrderItemListModel?> UpdateOrderAsync(UpdateOrderModel updateOrderModel);
 
         Task<bool> DeleteItemsFromOrderAsync(DeleteItemsModel deleteItemsModel);
 
