@@ -6,18 +6,18 @@ namespace E_commerceApplication.DTOs
 {
     public class AuthRequestDto
     {
-        [Required(ErrorMessageResourceType = typeof(ValidationMessages), 
-            ErrorMessageResourceName = nameof(ValidationMessages.EmailRequired))]
+        [Required(ErrorMessageResourceType = typeof(AuthDtoValidationMessages), 
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.EmailRequired))]
         [RegularExpression(ValidationPatterns.EmailPattern,
-            ErrorMessageResourceType = typeof(ValidationMessages),
-            ErrorMessageResourceName = nameof(ValidationMessages.InvalidEmail))]
+            ErrorMessageResourceType = typeof(AuthDtoValidationMessages),
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.InvalidEmail))]
         public string Email { get; set; } = string.Empty;
 
-        [Required(ErrorMessageResourceType = typeof(ValidationMessages),
-            ErrorMessageResourceName = nameof(ValidationMessages.PasswordRequired))]
+        [Required(ErrorMessageResourceType = typeof(AuthDtoValidationMessages),
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.PasswordRequired))]
         [RegularExpression(ValidationPatterns.PasswordPattern,
-            ErrorMessageResourceType = typeof(ValidationMessages), 
-            ErrorMessageResourceName = nameof(ValidationMessages.InvalidPassword))]
+            ErrorMessageResourceType = typeof(AuthDtoValidationMessages), 
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.InvalidPassword))]
         public string Password { get; set; } = string.Empty;
     }
 }

@@ -6,19 +6,19 @@ namespace E_commerceApplication.DTOs
 {
     public class UserProfileDto
     {
-        [Required(ErrorMessageResourceType = typeof(ValidationMessages), 
-            ErrorMessageResourceName = nameof(ValidationMessages.UserNameRequired))]
+        [Required(ErrorMessageResourceType = typeof(AuthDtoValidationMessages), 
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.UserNameRequired))]
         public string UserName { get; set; } = string.Empty;
 
-        [Required(ErrorMessageResourceType = typeof(ValidationMessages),
-            ErrorMessageResourceName = nameof(ValidationMessages.PhoneNumberRequired))]
+        [Required(ErrorMessageResourceType = typeof(AuthDtoValidationMessages),
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.PhoneNumberRequired))]
         [RegularExpression(ValidationPatterns.PhoneNumberPattern,
-            ErrorMessageResourceType = typeof(ValidationMessages), 
-            ErrorMessageResourceName = nameof(ValidationMessages.InvalidPhoneNumber))]
+            ErrorMessageResourceType = typeof(AuthDtoValidationMessages), 
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.InvalidPhoneNumber))]
         public string PhoneNumber { get; set; } = string.Empty;
 
-        [Required(ErrorMessageResourceType = typeof(ValidationMessages),
-            ErrorMessageResourceName = nameof(ValidationMessages.AddressDeliveryRequired))]
+        [Required(ErrorMessageResourceType = typeof(AuthDtoValidationMessages),
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.AddressDeliveryRequired))]
         public string AddressDelivery { get; set; } = string.Empty;
     }
 }

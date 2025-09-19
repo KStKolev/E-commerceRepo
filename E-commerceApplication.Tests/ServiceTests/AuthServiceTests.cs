@@ -29,42 +29,64 @@ namespace E_commerceApplication.Tests.ServiceTests
         [Fact]
         public async Task SignUp_ShouldReturnSuccess_WhenUserCreated()
         {
-            var request = new SignUpRequestModel { Email = "test@test.com", Password = "Hello123!;" };
+            string emailTest = "test@test.com";
+            string passwordTest = "Hello123!;";
+            string roleTest = "User";
+            string tokenResult = "token";
 
-            _userManagerMock.Setup(u => u.CreateAsync(It.IsAny<ApplicationUser>(), request.Password))
-                            .ReturnsAsync(IdentityResult.Success);
+            var request = new SignUpRequestModel { Email = emailTest, Password = passwordTest };
 
-            _userManagerMock.Setup(u => u.AddToRoleAsync(It.IsAny<ApplicationUser>(), "User"))
-                            .ReturnsAsync(IdentityResult.Success);
+            _userManagerMock
+                .Setup(u => u.CreateAsync(It.IsAny<ApplicationUser>(), request.Password))
+                    .ReturnsAsync(IdentityResult.Success);
 
-            _userManagerMock.Setup(u => u.GenerateEmailConfirmationTokenAsync(It.IsAny<ApplicationUser>()))
-                            .ReturnsAsync("token");
+            _userManagerMock
+                .Setup(u => u.AddToRoleAsync(It.IsAny<ApplicationUser>(), roleTest))
+                    .ReturnsAsync(IdentityResult.Success);
 
-            var result = await _authService.SignUpAsync(request);
+            _userManagerMock
+                .Setup(u => u.GenerateEmailConfirmationTokenAsync(It.IsAny<ApplicationUser>()))
+                    .ReturnsAsync(tokenResult);
 
-            Assert.True(result.Succeeded);
-            _emailServiceMock.Verify(e => e.SendEmailConfirmationAsync(request.Email, It.IsAny<string>()), Times.Once);
+            var result = await _authService
+                .SignUpAsync(request);
+
+            Assert
+                .True(result.Succeeded);
+
+            _emailServiceMock
+                .Verify(e => e.SendEmailConfirmationAsync(request.Email, It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
         public async Task SignIn_ShouldReturnSuccess_WhenCredentialsValid()
         {
-            var request = new SignInRequestModel { Email = "test@test.com", Password = "Hello123!" };
+            string emailTest = "test@test.com";
+            string passwordTest = "Hello123!;";
+
+            var request = new SignInRequestModel { Email = emailTest, Password = passwordTest };
             var user = new ApplicationUser { Email = request.Email };
 
-            _userManagerMock.Setup(u => u.FindByEmailAsync(request.Email))
-                            .ReturnsAsync(user);
+            _userManagerMock
+                .Setup(u => u.FindByEmailAsync(request.Email))
+                    .ReturnsAsync(user);
 
-            _userManagerMock.Setup(u => u.CheckPasswordAsync(user, request.Password))
-                            .ReturnsAsync(true);
+            _userManagerMock
+                .Setup(u => u.CheckPasswordAsync(user, request.Password))
+                    .ReturnsAsync(true);
 
-            _signInManagerMock.Setup(s => s.SignInAsync(user, false, null))
-                              .Returns(Task.CompletedTask);
+            _signInManagerMock
+                .Setup(s => s.SignInAsync(user, false, null))
+                    .Returns(Task.CompletedTask);
 
-            var result = await _authService.SignInAsync(request);
+            var result = await _authService
+                .SignInAsync(request);
 
-            Assert.True(result.Succeeded);
-            _signInManagerMock.Verify(s => s.SignInAsync(user, false, null), Times.Once);
+            Assert
+                .True(result.Succeeded);
+
+            _signInManagerMock
+                .Verify(s => s.SignInAsync(user, false, null), Times.Once);
         }
 
         [Fact]
@@ -74,64 +96,92 @@ namespace E_commerceApplication.Tests.ServiceTests
             var token = "token";
             var user = new ApplicationUser { Id = userId };
 
-            _userManagerMock.Setup(u => u.FindByIdAsync(userId.ToString()))
-                            .ReturnsAsync(user);
+            _userManagerMock
+                .Setup(u => u.FindByIdAsync(userId.ToString()))
+                    .ReturnsAsync(user);
 
-            _userManagerMock.Setup(u => u.ConfirmEmailAsync(user, token))
-                            .ReturnsAsync(IdentityResult.Success);
+            _userManagerMock
+                .Setup(u => u.ConfirmEmailAsync(user, token))
+                    .ReturnsAsync(IdentityResult.Success);
 
-            var result = await _authService.ConfirmEmailAsync(userId.ToString(), token);
+            var result = await _authService
+                .ConfirmEmailAsync(userId.ToString(), token);
 
-            Assert.True(result.Succeeded);
-            _userManagerMock.Verify(u => u.ConfirmEmailAsync(user, token), Times.Once);
+            Assert
+                .True(result.Succeeded);
+
+            _userManagerMock
+                .Verify(u => u.ConfirmEmailAsync(user, token), Times.Once);
         }
 
         [Fact]
         public async Task SignUp_ShouldFail_WhenUserCreationFails()
         {
-            var request = new SignUpRequestModel { Email = "fail@test.com", Password = "Password1" };
+            string emailFailTest = "fail@test.com";
+            string passwordFailTest = "Password1";
+
+            var request = new SignUpRequestModel { Email = emailFailTest, Password = passwordFailTest };
 
             string description = "User creation failed";
 
-            _userManagerMock.Setup(u => u.CreateAsync(It.IsAny<ApplicationUser>(), request.Password))
-                            .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = description }));
+            _userManagerMock
+                .Setup(u => u.CreateAsync(It.IsAny<ApplicationUser>(), request.Password))
+                    .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = description }));
 
-            var result = await _authService.SignUpAsync(request);
+            var result = await _authService
+                .SignUpAsync(request);
 
-            Assert.False(result.Succeeded);
+            Assert
+                .False(result.Succeeded);
+
             Assert.Contains(description, result.Errors.Select(e => e.Description));
-            _emailServiceMock.Verify(e => e.SendEmailConfirmationAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+
+            _emailServiceMock
+                .Verify(e => e.SendEmailConfirmationAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
         public async Task SignIn_ShouldFail_WhenUserNotFound()
         {
-            var request = new SignInRequestModel { Email = "unknown@test.com", Password = "Password1" };
+            string emailFailSignInTest = "unknown@test.com";
+            string passwordFailSignInTest = "Password1";
 
-            _userManagerMock.Setup(u => u.FindByEmailAsync(request.Email))
-                            .ReturnsAsync((ApplicationUser?)null);
+            var request = new SignInRequestModel { Email = emailFailSignInTest, Password = passwordFailSignInTest };
 
-            var result = await _authService.SignInAsync(request);
+            _userManagerMock
+                .Setup(u => u.FindByEmailAsync(request.Email))
+                    .ReturnsAsync((ApplicationUser?)null);
 
-            Assert.False(result.Succeeded);
+            var result = await _authService
+                .SignInAsync(request);
+
+            Assert
+                .False(result.Succeeded);
         }
 
 
         [Fact]
         public async Task SignIn_ShouldFail_WhenPasswordIncorrect()
         {
-            var request = new SignInRequestModel { Email = "test@test.com", Password = "WrongPassword" };
+            string emailSignInTest = "test@test.com";
+            string wrongPasswordTest = "WrongPassword";
+
+            var request = new SignInRequestModel { Email = emailSignInTest, Password = wrongPasswordTest };
             var user = new ApplicationUser { Email = request.Email };
 
-            _userManagerMock.Setup(u => u.FindByEmailAsync(request.Email))
-                            .ReturnsAsync(user);
+            _userManagerMock
+                .Setup(u => u.FindByEmailAsync(request.Email))
+                    .ReturnsAsync(user);
 
-            _userManagerMock.Setup(u => u.CheckPasswordAsync(user, request.Password))
-                            .ReturnsAsync(false);
+            _userManagerMock
+                .Setup(u => u.CheckPasswordAsync(user, request.Password))
+                    .ReturnsAsync(false);
 
-            var result = await _authService.SignInAsync(request);
+            var result = await _authService
+                .SignInAsync(request);
 
-            Assert.False(result.Succeeded);
+            Assert
+                .False(result.Succeeded);
         }
 
         [Fact]
@@ -140,12 +190,15 @@ namespace E_commerceApplication.Tests.ServiceTests
             string userId = string.Empty;
             var token = "token";
 
-            _userManagerMock.Setup(u => u.FindByIdAsync(userId.ToString()))
-                            .ReturnsAsync((ApplicationUser?)null);
+            _userManagerMock
+                .Setup(u => u.FindByIdAsync(userId.ToString()))
+                    .ReturnsAsync((ApplicationUser?)null);
 
-            var result = await _authService.ConfirmEmailAsync(userId, token);
+            var result = await _authService
+                .ConfirmEmailAsync(userId, token);
 
-            Assert.False(result.Succeeded);
+            Assert
+                .False(result.Succeeded);
         }
 
         [Fact]
@@ -157,15 +210,20 @@ namespace E_commerceApplication.Tests.ServiceTests
 
             string description = "Invalid token";
 
-            _userManagerMock.Setup(u => u.FindByIdAsync(userId.ToString()))
-                            .ReturnsAsync(user);
+            _userManagerMock
+                .Setup(u => u.FindByIdAsync(userId.ToString()))
+                    .ReturnsAsync(user);
 
-            _userManagerMock.Setup(u => u.ConfirmEmailAsync(user, token))
-                            .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = description }));
+            _userManagerMock
+                .Setup(u => u.ConfirmEmailAsync(user, token))
+                    .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = description }));
 
-            var result = await _authService.ConfirmEmailAsync(userId.ToString(), token);
+            var result = await _authService
+                .ConfirmEmailAsync(userId.ToString(), token);
 
-            Assert.False(result.Succeeded);
+            Assert
+                .False(result.Succeeded);
+
             Assert.Contains(description, result.Errors.Select(e => e.Description));
         }
     }

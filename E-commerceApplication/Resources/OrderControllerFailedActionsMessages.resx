@@ -117,7 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ProductNotFound" xml:space="preserve">
-    <value>No product found with id {0}</value>
+  <data name="BuyOrderItemsBadRequest" xml:space="preserve">
+    <value>Bad Order items Purchase request</value>
+  </data>
+  <data name="CreateOrderBadRequest" xml:space="preserve">
+    <value>Bad Creation of order request</value>
+  </data>
+  <data name="LoadOrderNotFound" xml:space="preserve">
+    <value>Load Order not found</value>
+  </data>
+  <data name="RemoveOrderItemsBadRequest" xml:space="preserve">
+    <value>Bad Removal of order items request</value>
+  </data>
+  <data name="UpdateOrderBadRequest" xml:space="preserve">
+    <value>Bad Update of order request</value>
+  </data>
+  <data name="UserNotAuthorized" xml:space="preserve">
+    <value>User is not authorized</value>
   </data>
 </root>

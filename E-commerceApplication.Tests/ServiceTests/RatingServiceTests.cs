@@ -8,12 +8,14 @@ namespace E_commerceApplication.Tests.ServiceTests
     public class RatingServiceTests
     {
         private readonly Mock<IRatingRepository> _mockRatingRepository;
+        private readonly Mock<IRatingValidationRepository> _mockRatingValidationRepository;
         private readonly RatingService _service;
 
         public RatingServiceTests()
         {
             _mockRatingRepository = new Mock<IRatingRepository>();
-            _service = new RatingService(_mockRatingRepository.Object);
+            _mockRatingValidationRepository = new Mock<IRatingValidationRepository>();
+            _service = new RatingService(_mockRatingRepository.Object, _mockRatingValidationRepository.Object);
         }
 
         [Fact]
@@ -29,8 +31,8 @@ namespace E_commerceApplication.Tests.ServiceTests
                 Rating = ratingValue
             };
 
-            _mockRatingRepository
-                .Setup(r => r.CheckProductWithIdAsync(model.ProductId))
+            _mockRatingValidationRepository
+                .Setup(r => r.CheckProductByIdAsync(model.ProductId))
                     .ReturnsAsync(false);
 
             var result = await _service
@@ -53,8 +55,8 @@ namespace E_commerceApplication.Tests.ServiceTests
                 Rating = ratingValue
             };
 
-            _mockRatingRepository
-                .Setup(r => r.CheckProductWithIdAsync(model.ProductId))
+            _mockRatingValidationRepository
+                .Setup(r => r.CheckProductByIdAsync(model.ProductId))
                     .ReturnsAsync(true);
 
             _mockRatingRepository

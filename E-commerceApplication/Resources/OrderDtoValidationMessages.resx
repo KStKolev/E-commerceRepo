@@ -117,19 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DeleteGameBadRequestMessage" xml:space="preserve">
-    <value>Bad Game removement request</value>
-  </data>
-  <data name="EditRatingBadRequestMessage" xml:space="preserve">
-    <value>Bad Rating editing request</value>
-  </data>
-  <data name="NotFoundGameRequestMessage" xml:space="preserve">
-    <value>Not Found Game request</value>
-  </data>
-  <data name="UpdateGameBadRequestMessage" xml:space="preserve">
-    <value>Bad Game update request</value>
-  </data>
-  <data name="UserNotAuthorized" xml:space="preserve">
-    <value>User was not authorized</value>
+  <data name="InvalidAmount" xml:space="preserve">
+    <value>Invalid amount</value>
   </data>
 </root>

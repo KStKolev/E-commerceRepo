@@ -6,15 +6,15 @@ namespace E_commerceApplication.DTOs
 {
     public class UpdatePasswordDto
     {
-        [Required(ErrorMessageResourceType = typeof(ValidationMessages),
-            ErrorMessageResourceName = nameof(ValidationMessages.PasswordRequired))]
+        [Required(ErrorMessageResourceType = typeof(AuthDtoValidationMessages),
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.PasswordRequired))]
         public string CurrentPassword { get; set; } = string.Empty;
 
-        [Required(ErrorMessageResourceType = typeof(ValidationMessages),
-            ErrorMessageResourceName = nameof(ValidationMessages.PasswordRequired))]
+        [Required(ErrorMessageResourceType = typeof(AuthDtoValidationMessages),
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.PasswordRequired))]
         [RegularExpression(ValidationPatterns.PasswordPattern,
-            ErrorMessageResourceType = typeof(ValidationMessages),
-            ErrorMessageResourceName = nameof(ValidationMessages.InvalidPassword))]
+            ErrorMessageResourceType = typeof(AuthDtoValidationMessages),
+            ErrorMessageResourceName = nameof(AuthDtoValidationMessages.InvalidPassword))]
         public string NewPassword { get; set; } = string.Empty;
     }
 }

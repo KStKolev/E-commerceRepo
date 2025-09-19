@@ -22,14 +22,14 @@ namespace E_commerceApplication.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ValidationMessages {
+    public class OrderControllerFailedActionsMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ValidationMessages() {
+        internal OrderControllerFailedActionsMessages() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace E_commerceApplication.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("E_commerceApplication.Resources.ValidationMessages", typeof(ValidationMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("E_commerceApplication.Resources.OrderControllerFailedActionsMessages", typeof(OrderControllerFailedActionsMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,74 +61,56 @@ namespace E_commerceApplication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Address delivery is required.
+        ///   Looks up a localized string similar to Bad Order items Purchase request.
         /// </summary>
-        public static string AddressDeliveryRequired {
+        public static string BuyOrderItemsBadRequest {
             get {
-                return ResourceManager.GetString("AddressDeliveryRequired", resourceCulture);
+                return ResourceManager.GetString("BuyOrderItemsBadRequest", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email is required.
+        ///   Looks up a localized string similar to Bad Creation of order request.
         /// </summary>
-        public static string EmailRequired {
+        public static string CreateOrderBadRequest {
             get {
-                return ResourceManager.GetString("EmailRequired", resourceCulture);
+                return ResourceManager.GetString("CreateOrderBadRequest", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid email format.
+        ///   Looks up a localized string similar to Load Order not found.
         /// </summary>
-        public static string InvalidEmail {
+        public static string LoadOrderNotFound {
             get {
-                return ResourceManager.GetString("InvalidEmail", resourceCulture);
+                return ResourceManager.GetString("LoadOrderNotFound", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password must be at least 8 characters, include upper/lowercase, number, and special character.
+        ///   Looks up a localized string similar to Bad Removal of order items request.
         /// </summary>
-        public static string InvalidPassword {
+        public static string RemoveOrderItemsBadRequest {
             get {
-                return ResourceManager.GetString("InvalidPassword", resourceCulture);
+                return ResourceManager.GetString("RemoveOrderItemsBadRequest", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid phone number format.
+        ///   Looks up a localized string similar to Bad Update of order request.
         /// </summary>
-        public static string InvalidPhoneNumber {
+        public static string UpdateOrderBadRequest {
             get {
-                return ResourceManager.GetString("InvalidPhoneNumber", resourceCulture);
+                return ResourceManager.GetString("UpdateOrderBadRequest", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password is required.
+        ///   Looks up a localized string similar to User is not authorized.
         /// </summary>
-        public static string PasswordRequired {
+        public static string UserNotAuthorized {
             get {
-                return ResourceManager.GetString("PasswordRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Phone number is required.
-        /// </summary>
-        public static string PhoneNumberRequired {
-            get {
-                return ResourceManager.GetString("PhoneNumberRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Username is required.
-        /// </summary>
-        public static string UserNameRequired {
-            get {
-                return ResourceManager.GetString("UserNameRequired", resourceCulture);
+                return ResourceManager.GetString("UserNotAuthorized", resourceCulture);
             }
         }
     }

@@ -22,14 +22,14 @@ namespace E_commerceApplication.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class GamesControllerFailedActionsMessages {
+    public class AuthDtoValidationMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal GamesControllerFailedActionsMessages() {
+        internal AuthDtoValidationMessages() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace E_commerceApplication.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("E_commerceApplication.Resources.GamesControllerFailedActionsMessages", typeof(GamesControllerFailedActionsMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("E_commerceApplication.Resources.AuthDtoValidationMessages", typeof(AuthDtoValidationMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +61,74 @@ namespace E_commerceApplication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bad Game removement request.
+        ///   Looks up a localized string similar to Address delivery is required.
         /// </summary>
-        public static string DeleteGameBadRequestMessage {
+        public static string AddressDeliveryRequired {
             get {
-                return ResourceManager.GetString("DeleteGameBadRequestMessage", resourceCulture);
+                return ResourceManager.GetString("AddressDeliveryRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bad Rating editing request.
+        ///   Looks up a localized string similar to Email is required.
         /// </summary>
-        public static string EditRatingBadRequestMessage {
+        public static string EmailRequired {
             get {
-                return ResourceManager.GetString("EditRatingBadRequestMessage", resourceCulture);
+                return ResourceManager.GetString("EmailRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Not Found Game request.
+        ///   Looks up a localized string similar to Invalid email format.
         /// </summary>
-        public static string NotFoundGameRequestMessage {
+        public static string InvalidEmail {
             get {
-                return ResourceManager.GetString("NotFoundGameRequestMessage", resourceCulture);
+                return ResourceManager.GetString("InvalidEmail", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bad Game update request.
+        ///   Looks up a localized string similar to Password must be at least 8 characters, include upper/lowercase, number, and special character.
         /// </summary>
-        public static string UpdateGameBadRequestMessage {
+        public static string InvalidPassword {
             get {
-                return ResourceManager.GetString("UpdateGameBadRequestMessage", resourceCulture);
+                return ResourceManager.GetString("InvalidPassword", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User was not authorized.
+        ///   Looks up a localized string similar to Invalid phone number format.
         /// </summary>
-        public static string UserNotAuthorized {
+        public static string InvalidPhoneNumber {
             get {
-                return ResourceManager.GetString("UserNotAuthorized", resourceCulture);
+                return ResourceManager.GetString("InvalidPhoneNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password is required.
+        /// </summary>
+        public static string PasswordRequired {
+            get {
+                return ResourceManager.GetString("PasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone number is required.
+        /// </summary>
+        public static string PhoneNumberRequired {
+            get {
+                return ResourceManager.GetString("PhoneNumberRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username is required.
+        /// </summary>
+        public static string UserNameRequired {
+            get {
+                return ResourceManager.GetString("UserNameRequired", resourceCulture);
             }
         }
     }

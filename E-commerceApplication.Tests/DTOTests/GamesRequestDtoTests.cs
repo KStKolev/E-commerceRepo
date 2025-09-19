@@ -15,7 +15,9 @@ namespace E_commerceApplication.Tests.DTOTests
             var results = ValidationHelper
                 .ValidateModel(dto);
 
-            Assert.NotEmpty(results);
+            Assert
+                .NotEmpty(results);
+
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(dto.Name)));
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(dto.Genre)));
             Assert.Contains(results, r => r.MemberNames.Contains(nameof(dto.Logo)));
@@ -47,7 +49,8 @@ namespace E_commerceApplication.Tests.DTOTests
                 Price = invalidPriceValue
             };
 
-            var results = ValidationHelper.ValidateModel(dto);
+            var results = ValidationHelper
+                .ValidateModel(dto);
 
             Assert.Contains(results, r => r.ErrorMessage!.Contains(nameof(dto.Rating)));
             Assert.Contains(results, r => r.ErrorMessage!.Contains(nameof(dto.Platform)));
@@ -80,7 +83,8 @@ namespace E_commerceApplication.Tests.DTOTests
             var results = ValidationHelper
                 .ValidateModel(dto);
 
-            Assert.Empty(results);
+            Assert
+                .Empty(results);
         }
 
         [Fact]
@@ -111,7 +115,8 @@ namespace E_commerceApplication.Tests.DTOTests
             var results = ValidationHelper
                 .ValidateModel(dto);
 
-            Assert.Empty(results);
+            Assert
+                .Empty(results);
         }
     }
 }
