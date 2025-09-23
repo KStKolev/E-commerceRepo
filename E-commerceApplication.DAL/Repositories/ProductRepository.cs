@@ -29,6 +29,7 @@ namespace E_commerceApplication.DAL.Repositories
             return await query
                 .Skip(offset)
                 .Take(limit)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -38,6 +39,7 @@ namespace E_commerceApplication.DAL.Repositories
 
             return await _context
                 .Products
+                .AsNoTracking()
                 .GroupBy(p => p.Platform)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
@@ -90,7 +92,8 @@ namespace E_commerceApplication.DAL.Repositories
         {
             IQueryable<Product> query = _context
                 .Products
-                .AsQueryable();
+                .AsQueryable()
+                .AsNoTracking();
 
             if (genres.Any())
             {

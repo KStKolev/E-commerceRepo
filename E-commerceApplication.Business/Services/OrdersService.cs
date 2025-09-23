@@ -48,7 +48,7 @@ namespace E_commerceApplication.Business.Services
         public async Task<List<LoadOrderItemModel>> GetLoadItemListByOrderIdAsync(int orderId)
         {
             List<OrderItem> orderItemList = await _ordersRepository
-                .GetOrderItemByListOrderIdAsync(orderId);
+                .GetOrderItemListByOrderIdAsync(orderId);
 
             List<LoadOrderItemModel> loadedOrderItems = orderItemList
                 .Select(oi => new LoadOrderItemModel()

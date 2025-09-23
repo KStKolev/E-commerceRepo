@@ -313,7 +313,7 @@ namespace E_commerceApplication.Controllers
             };
 
             PaginatedResponseModel<Product> paginatedGames = await _gamesService
-                .GetPaginatedGames(gameFilterAndSortModel, paginationRequestModel);
+                .GetPaginatedGamesAsync(gameFilterAndSortModel, paginationRequestModel);
 
             return Ok(paginatedGames);
         }

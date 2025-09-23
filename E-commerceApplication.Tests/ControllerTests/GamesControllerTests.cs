@@ -458,7 +458,7 @@ namespace E_commerceApplication.Tests.ControllerTests
             };
 
             _mockGamesService
-                .Setup(s => s.GetPaginatedGames(It.IsAny<GameFilterAndSortModel>(), It.IsAny<PaginationRequestModel>()))
+                .Setup(s => s.GetPaginatedGamesAsync(It.IsAny<GameFilterAndSortModel>(), It.IsAny<PaginationRequestModel>()))
                     .ReturnsAsync(paginatedGames);
 
             var filterDto = new GameFilterAndSortRequestDto

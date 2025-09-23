@@ -94,7 +94,7 @@ namespace E_commerceApplication.Business.Services
             return true;
         }
 
-        public async Task<PaginatedResponseModel<Product>> GetPaginatedGames(GameFilterAndSortModel gameListModel,
+        public async Task<PaginatedResponseModel<Product>> GetPaginatedGamesAsync(GameFilterAndSortModel gameListModel,
             PaginationRequestModel paginationRequestModel)
         {
             List<string> genres = gameListModel.Genres;

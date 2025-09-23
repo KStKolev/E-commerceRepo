@@ -433,7 +433,7 @@ namespace E_commerceApplication.Tests.ServiceTests
             };
 
             PaginatedResponseModel<Product> result = await _gamesService
-                .GetPaginatedGames(filterModel, paginationModel);
+                .GetPaginatedGamesAsync(filterModel, paginationModel);
 
             Assert
                 .Equal(productsCount, result.Items.Count);
@@ -489,7 +489,7 @@ namespace E_commerceApplication.Tests.ServiceTests
             };
 
             PaginatedResponseModel<Product> result = await _gamesService
-                .GetPaginatedGames(filterModel, paginationModel);
+                .GetPaginatedGamesAsync(filterModel, paginationModel);
 
             Assert
                 .Empty(result.Items);
