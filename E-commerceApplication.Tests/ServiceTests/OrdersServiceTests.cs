@@ -84,7 +84,7 @@ namespace E_commerceApplication.Tests.ServiceTests
             };
 
             _ordersRepositoryMock
-                .Setup(r => r.GetOrderItemByListOrderIdAsync(orderId))
+                .Setup(r => r.GetOrderItemListByOrderIdAsync(orderId))
                 .ReturnsAsync(orderItems);
 
             var result = await _service
