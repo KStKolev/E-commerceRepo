@@ -16,7 +16,7 @@ namespace E_commerceApplication.DAL.Interfaces
 
         Task<Order?> GetOrderByUserIdAsync(Guid userId);
 
-        Task<List<OrderItem>> GetOrderItemByListOrderIdAsync(int orderId);
+        Task<List<OrderItem>> GetOrderItemListByOrderIdAsync(int orderId);
 
         Task<List<OrderItem>> GetOrderItemListByIdCollectionAsync(List<int> orderItemIdCollection);
     }
