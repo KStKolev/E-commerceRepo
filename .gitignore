@@ -16,3 +16,7 @@ secrets.json
 
 # Environments
 .env
+
+# Publish
+*.csproj.user
+**/Properties/PublishProfiles/*.pubxml.user
