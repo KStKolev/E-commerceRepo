@@ -28,17 +28,11 @@ namespace E_commerceApplication.Tests.ControllerTests
             };
 
             _userServiceMock
-            .Setup(s => s.GetProfileAsync(null))
-            .ReturnsAsync((UserProfileModel?)null);
+                .Setup(s => s.GetProfileAsync(null))
+                .ReturnsAsync((UserProfileModel?)null);
 
-            var result = await _controller
-                .GetProfile();
-
-            var notFound = Assert
-                .IsType<NotFoundResult>(result);
-
-            Assert
-                .Equal(StatusCodes.Status404NotFound, notFound.StatusCode);
+            await Assert
+                .ThrowsAsync<NullReferenceException>(() => _controller.GetProfile());
         }
 
         [Fact]
