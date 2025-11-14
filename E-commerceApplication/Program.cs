@@ -4,9 +4,11 @@ using E_commerceApplication;
 using E_commerceApplication.DAL.Data;
 using E_commerceApplication.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
+using System.IO.Compression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +49,9 @@ builder.Services.AddControllers()
         opts.JsonSerializerOptions
             .Converters
             .Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+
+        opts.JsonSerializerOptions.DefaultIgnoreCondition =
+           System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
     });
 builder.Services.AddSwaggerGen(c =>
 {
@@ -57,6 +62,20 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddApplicationServices();
 builder.Services.AddSingleton(cloudinary);
+builder.Services.AddMemoryCache();
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes
+        .Concat(["application/json"]);
+});
+
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -108,6 +127,8 @@ if (app.Environment.IsDevelopment())
     app.UseMigrationsEndPoint();
     app.UseSwagger();
     app.UseSwaggerUI();
+    builder.Configuration
+        .AddUserSecrets<Program>(optional: false);
 }
 else
 {
@@ -117,6 +138,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseResponseCompression();
 
 app.UseAuthentication();
 app.UseAuthorization();

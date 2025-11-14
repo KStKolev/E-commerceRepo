@@ -17,10 +17,12 @@ namespace E_commerceApplication.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IUserCacheService _cacheService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IUserCacheService cacheService)
         {
             _userService = userService;
+            _cacheService = cacheService;
         }
 
         /// <summary>
@@ -32,18 +34,29 @@ namespace E_commerceApplication.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserProfileDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetProfile() 
+        public async Task<IActionResult> GetProfile()
         {
-            string? userId = User
-                .FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+            string userId = User
+                .FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-            UserProfileModel? profile = await _userService
+            UserProfileModel? profile = _cacheService
+                .Get<UserProfileModel>(userId);
+
+            if (profile != null) 
+            {
+                return Ok(profile);
+            }
+
+            profile = await _userService
                 .GetProfileAsync(userId);
 
             if (profile == null) 
             {
                 return NotFound();
             }
+
+            _cacheService
+                .Set(userId, profile);
 
             return Ok(profile);
         }
@@ -74,6 +87,9 @@ namespace E_commerceApplication.Controllers
 
             IdentityResult result = await _userService
                 .UpdateUserProfileAsync(userId, userProfileModel);
+
+            _cacheService
+                .Remove(userId);
 
             if (!result.Succeeded)
             {
@@ -108,6 +124,9 @@ namespace E_commerceApplication.Controllers
 
             IdentityResult result = await _userService
                 .UpdatePasswordAsync(userId, updatePasswordModel);
+
+            _cacheService
+                .Remove(userId);
 
             if (!result.Succeeded)
             {

@@ -47,6 +47,10 @@ namespace E_commerceApplication
                 .AddScoped<IOrdersValidationRepository, OrdersValidationRepository>();
 
             services
+                .AddSingleton<ICacheService, CacheService>();
+            services
+                .AddSingleton<IUserCacheService, UserCacheService>();
+            services
                 .AddScoped<ValidateGameListParamsAttribute>();
 
             return services;

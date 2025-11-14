@@ -65,11 +65,12 @@ namespace E_commerceApplication.DAL.Repositories
                 .FirstOrDefaultAsync(o => o.UserId == userId && o.OrderStatus == OrderStatus.Pending);
         }
 
-        public async Task<List<OrderItem>> GetOrderItemByListOrderIdAsync(int orderId)
+        public async Task<List<OrderItem>> GetOrderItemListByOrderIdAsync(int orderId)
         {
             return await _context
                 .OrderItems
                 .Where(o => o.OrderId == orderId)
+                .AsNoTracking()
                 .ToListAsync();
         }
 

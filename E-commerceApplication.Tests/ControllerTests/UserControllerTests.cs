@@ -13,13 +13,15 @@ namespace E_commerceApplication.Tests.ControllerTests
     public class UserControllerTests
     {
         private readonly Mock<IUserService> _userServiceMock;
+        private readonly Mock<IUserCacheService> _cacheServiceMock;
         private readonly UserController _controller;
         private const string UserId = "user-123";
 
         public UserControllerTests()
         {
             _userServiceMock = new Mock<IUserService>();
-            _controller = new UserController(_userServiceMock.Object);
+            _cacheServiceMock = new Mock<IUserCacheService>();
+            _controller = new UserController(_userServiceMock.Object, _cacheServiceMock.Object);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {

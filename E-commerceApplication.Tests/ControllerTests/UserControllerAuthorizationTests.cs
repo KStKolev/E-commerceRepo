@@ -12,11 +12,13 @@ namespace E_commerceApplication.Tests.ControllerTests
     {
         private readonly UserController _controller;
         private readonly Mock<IUserService> _userServiceMock;
+        private readonly Mock<IUserCacheService> _cacheServiceMock;
 
         public UserControllerAuthorizationTests()
         {
             _userServiceMock = new Mock<IUserService>();
-            _controller = new UserController(_userServiceMock.Object);
+            _cacheServiceMock = new Mock<IUserCacheService>();
+            _controller = new UserController(_userServiceMock.Object, _cacheServiceMock.Object);
         }
 
         [Fact]
