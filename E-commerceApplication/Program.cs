@@ -12,14 +12,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddUserSecrets<Program>(optional: false);
+    .AddUserSecrets<Program>(optional: false)
+    .AddEnvironmentVariables();
 
-var connectionString = builder.Configuration
-    .GetConnectionString("DefaultConnection") ?? 
-    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString, sql =>
+    {
+        sql.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null);
+    }));
 
 builder.Services
     .AddOptions<SmtpSettings>()
@@ -73,7 +76,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddHealthChecks()
     .AddCheck(
         "DB-check",
-        new SqlConnectionHealthCheck(builder.Configuration.GetConnectionString("DefaultConnection"), "Select 1"),
+        new SqlConnectionHealthCheck(connectionString, "Select 1"),
         HealthStatus.Unhealthy);
 
 Log.Logger = new LoggerConfiguration()
@@ -89,6 +92,9 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await db.Database.MigrateAsync();
+
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
     await IdentityDataSeeder.SeedIdentityAsync(userManager, roleManager);
