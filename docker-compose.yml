@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ecommerce-sql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${SA_PASSWORD:-Your_strong_password_123!}
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/1433' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  app:
+    build:
+      context: .
+      dockerfile: E-commerceApplication/Dockerfile
+      args:
+        - BUILD_CONFIGURATION=Release
+    container_name: ecommerce-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080;http://+:8081
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=EcommerceDb;User Id=sa;Password=${SA_PASSWORD:-Your_strong_password_123!};Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=True
+      - CLOUDINARY_URL=${CLOUDINARY_URL:-}
+      - Smtp__Host=${SMTP_HOST:-}
+      - Smtp__Port=${SMTP_PORT:-}
+      - Smtp__User=${SMTP_USER:-}
+      - Smtp__Password=${SMTP_PASSWORD:-}
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    restart: on-failure
+
+volumes:
+  mssql-data:
